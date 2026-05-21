@@ -1,4 +1,4 @@
-# 2026-05-20 — Kickoff Meeting Agenda
+# Kickoff Meeting Agenda
 
 > Status: **agenda (pre-meeting)**. After the meeting, fill in Decisions / Open questions / Action items.
 
@@ -13,13 +13,17 @@ First sync meeting after the partner shared the proposed file structure (`docs:p
 So has read the subject and reviewed the partner's plan.
 Goal: align on **algorithm selection, scope, and role split** before implementation starts.
 
+**Pre-meeting preparation by So (2026-05-20 / 2026-05-21)**: studied the Simple and Medium tiers in depth and prepared concrete proposals for Topic 1. See `learning_log/algorithms-simple-o-n2.md` and `learning_log/algorithms-medium-o-nsqrtn.md` for the analysis. Proposals are noted inline under Topic 1.
+
 ### Topics to discuss
 
 #### 1. Algorithm selection per tier (nothing is locked in yet)
 The skeleton proposes one specific algorithm per tier, but **the choice for each tier is still open**.
 
 - **Simple O(n²)** — Selection Sort? Insertion Sort? Min Extraction? Bubble Sort?
+  > **So's proposal**: **Min Extraction** or **Insertion Sort**. Min Extraction has the lowest naive op count (~n²/4); Insertion Sort excels on partially sorted input — relevant for Adaptive's low-disorder regime. Selection (naive) and Bubble are dominated. Final pick depends on how heavily Adaptive uses Simple.
 - **Medium O(n√n)** — Chunk Sort? Block partitioning? Bucket Sort with √n buckets? Range-based?
+  > **So's proposal**: **Chunk Sort with in-chunk sort**. Basic Chunk Sort risks missing the n=500 benchmark (~14,000 ops); with insertion-style in-chunk sort, ~7,000 ops (good tier) is reachable. The subject's other three names converge to Chunk Sort in push_swap's operation model.
 - **Complex O(n log n)** — Radix Sort? Merge Sort (2-stack)? Quick Sort (partition)? Heap Sort? BIT?
   > Radix is the skeleton's proposal, **but not yet decided**.
 - **Adaptive** — given the picks above, how does the dispatcher compose them per disorder regime?
@@ -105,13 +109,17 @@ Rationale: drafters split, but every piece is **co-reviewed** — both must expl
 So は subject を読み、相方のプランをレビュー済み。
 実装着手前に **アルゴリズム選定・スコープ・役割分担** を合意するのが目的。
 
+**So の事前準備(2026-05-20 / 2026-05-21)**:Simple および Medium tier のアルゴリズムを詳しく調査し、Topic 1 に向けた具体的な提案を準備済み。分析内容は `learning_log/algorithms-simple-o-n2.md` および `learning_log/algorithms-medium-o-nsqrtn.md` を参照。提案内容は Topic 1 の各 tier に併記。
+
 ### 議題
 
 #### 1. 各 tier のアルゴリズム選定(いずれもまだ確定していない)
 スケルトンは tier ごとに 1 つの具体的アルゴリズムを提案しているが、**各 tier の選択はまだ未確定**。
 
 - **Simple O(n²)** — Selection Sort? Insertion Sort? Min Extraction? Bubble Sort?
+  > **So の提案**:**Min Extraction** または **Insertion Sort**。Min Extraction は naive な操作数が最少(~n²/4)、Insertion Sort は部分整列入力で圧倒的に速い(Adaptive の低 disorder レジームで活きる)。Selection(naive)と Bubble は他に劣り却下。最終選択は Adaptive で Simple をどう使うかによる。
 - **Medium O(n√n)** — Chunk Sort? Block partitioning? √n バケットの Bucket Sort? 範囲ベース?
+  > **So の提案**:**Chunk Sort + in-chunk sort**。basic な Chunk Sort のみだと n=500 のベンチライン(<12,000 ops)を割る恐れあり(~14,000 ops 想定)。insertion 流の in-chunk sort を入れれば ~7,000 ops(good tier)まで詰まる。subject の他 3 つの名前は push_swap の操作モデル上 Chunk Sort に収束する。
 - **Complex O(n log n)** — Radix Sort? 2-stack の Merge Sort? Quick Sort(partition)? Heap Sort? BIT?
   > Radix はスケルトンの提案だが、**まだ採用が確定していない**。
 - **Adaptive** — 上記の選定を踏まえ、disorder のレジームごとに何をどう呼ぶか
