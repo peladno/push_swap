@@ -13,7 +13,7 @@ First sync meeting after the partner shared the proposed file structure (`docs:p
 So has read the subject and reviewed the partner's plan.
 Goal: align on **algorithm selection, scope, and role split** before implementation starts.
 
-**Pre-meeting preparation by So (2026-05-20 / 2026-05-21)**: studied the Simple and Medium tiers in depth and prepared concrete proposals for Topic 1. See `learning_log/algorithms-simple-o-n2.md` and `learning_log/algorithms-medium-o-nsqrtn.md` for the analysis. Proposals are noted inline under Topic 1.
+**Pre-meeting preparation by So (2026-05-20 / 2026-05-21)**: studied the Simple, Medium, and Complex tiers in depth and prepared concrete proposals for Topic 1. See `learning_log/algorithms-simple-o-n2.md`, `learning_log/algorithms-medium-o-nsqrtn.md`, and `learning_log/algorithms-complex-o-nlogn.md` for the analysis. Proposals are noted inline under Topic 1.
 
 ### Topics to discuss
 
@@ -26,6 +26,7 @@ The skeleton proposes one specific algorithm per tier, but **the choice for each
   > **So's proposal**: **Chunk Sort with in-chunk sort**. Basic Chunk Sort risks missing the n=500 benchmark (~14,000 ops); with insertion-style in-chunk sort, ~7,000 ops (good tier) is reachable. The subject's other three names converge to Chunk Sort in push_swap's operation model.
 - **Complex O(n log n)** — Radix Sort? Merge Sort (2-stack)? Quick Sort (partition)? Heap Sort? BIT?
   > Radix is the skeleton's proposal, **but not yet decided**.
+  > **So's proposal**: **Radix Sort (LSD, binary)**. Best match for push_swap's instruction set (`pb` / `ra` / `pa` map directly to bit-based bucketing). Reaches the excellent benchmark band (~4,500–6,000 ops at n=500). Requires coordinate compression to fix the bit count at `log₂(n)` — settles Topic 5 if adopted. Quick Sort is a workable backup; Merge / Heap / BIT are impractical (Heap fails to achieve O(n log n) in the operation model; BIT isn't a sorting algorithm).
 - **Adaptive** — given the picks above, how does the dispatcher compose them per disorder regime?
 
 #### 2. Extras beyond subject requirements
@@ -47,9 +48,17 @@ The README proposes a doubly linked list with `t_node {value, index, next, prev}
 - Merge / Quick / Heap don't strictly require compression — though indexes can still simplify code.
 - Final decision depends on the Complex choice in Topic 1.
 
-#### 6. Adaptive thresholds
-The README suggests `disorder < 0.2 → simple`, `< 0.5 → medium`, `≥ 0.5 → complex`.
-- Accept these thresholds? What rationale will we document in the project README?
+#### 6. Adaptive design (thresholds are fixed by subject VI.3.3 #4)
+The subject **mandates** the regimes:
+- `disorder < 0.2` → must run in **O(n²)**
+- `0.2 ≤ disorder < 0.5` → must run in **O(n√n)**
+- `disorder ≥ 0.5` → must run in **O(n log n)**
+
+What's actually open for us to decide:
+- **Which internal algorithm in each regime.** Default = our Topic 1 picks (Min Extraction / Chunk+in-chunk / Radix LSD). But we could differ — e.g., use **Insertion Sort** for the low-disorder regime even if `--simple` runs Min Extraction, because Insertion is much faster on partially sorted input.
+- **README documentation responsibility.** Subject requires us to document: rationale for the thresholds, internal techniques per regime, and a complexity argument (upper bounds) for time and space in the Push_swap model. Who writes which part? (Tentative split in the role table below; confirm and break down further.)
+
+> Note: The disorder calculation itself is specified by the subject VI.3.2 pseudo-code. C translation details (linked-list traversal, float vs integer comparison, n ≤ 1 boundary) are implementation choices, not meeting topics.
 
 #### 7. Code conventions
 Norm, file/function naming, where libft sits, operation wrapper signature (the README suggests `op_sa(t_stack *a, t_bench *bench, int print)`).
@@ -109,7 +118,7 @@ Rationale: drafters split, but every piece is **co-reviewed** — both must expl
 So は subject を読み、相方のプランをレビュー済み。
 実装着手前に **アルゴリズム選定・スコープ・役割分担** を合意するのが目的。
 
-**So の事前準備(2026-05-20 / 2026-05-21)**:Simple および Medium tier のアルゴリズムを詳しく調査し、Topic 1 に向けた具体的な提案を準備済み。分析内容は `learning_log/algorithms-simple-o-n2.md` および `learning_log/algorithms-medium-o-nsqrtn.md` を参照。提案内容は Topic 1 の各 tier に併記。
+**So の事前準備(2026-05-20 / 2026-05-21)**:Simple、Medium、Complex tier のアルゴリズムを詳しく調査し、Topic 1 に向けた具体的な提案を準備済み。分析内容は `learning_log/algorithms-simple-o-n2.md`、`learning_log/algorithms-medium-o-nsqrtn.md`、`learning_log/algorithms-complex-o-nlogn.md` を参照。提案内容は Topic 1 の各 tier に併記。
 
 ### 議題
 
@@ -122,6 +131,7 @@ So は subject を読み、相方のプランをレビュー済み。
   > **So の提案**:**Chunk Sort + in-chunk sort**。basic な Chunk Sort のみだと n=500 のベンチライン(<12,000 ops)を割る恐れあり(~14,000 ops 想定)。insertion 流の in-chunk sort を入れれば ~7,000 ops(good tier)まで詰まる。subject の他 3 つの名前は push_swap の操作モデル上 Chunk Sort に収束する。
 - **Complex O(n log n)** — Radix Sort? 2-stack の Merge Sort? Quick Sort(partition)? Heap Sort? BIT?
   > Radix はスケルトンの提案だが、**まだ採用が確定していない**。
+  > **So の提案**:**Radix Sort(LSD、2 進)**。push_swap の命令セットと相性最良(`pb` / `ra` / `pa` が bit ベースの振り分けに直接対応)。n=500 で excellent 圏(約 4,500〜6,000 ops)に届く。**座標圧縮が必須**(bit 数を `log₂(n)` に固定するため)—— 採用すれば Topic 5 も同時に決まる。Quick Sort は代替案として可。Merge / Heap / BIT は非現実的(特に Heap は操作モデル上 O(n log n) を達成できない、BIT はそもそも算法ではない)。
 - **Adaptive** — 上記の選定を踏まえ、disorder のレジームごとに何をどう呼ぶか
 
 #### 2. 課題要件外の実装(extras)を入れるか
@@ -143,9 +153,17 @@ README は双方向連結リスト(`t_node {value, index, next, prev}`, `t_stack
 - Merge / Quick / Heap は厳密には不要(index があるとコードが楽になる程度)
 - Topic 1 の Complex 選定結果による
 
-#### 6. Adaptive のしきい値
-README は `disorder < 0.2 → simple`, `< 0.5 → medium`, `≥ 0.5 → complex` を提案。
-- このしきい値を採用する?プロジェクト README に書く根拠は?
+#### 6. Adaptive 設計(しきい値は subject VI.3.3 #4 で固定)
+subject が**規定**:
+- `disorder < 0.2` → **O(n²)** で動作すること
+- `0.2 ≤ disorder < 0.5` → **O(n√n)** で動作すること
+- `disorder ≥ 0.5` → **O(n log n)** で動作すること
+
+学習者が決められるのは:
+- **各レジームで呼ぶ内部アルゴリズム**。デフォルトは Topic 1 の選定(Min Extraction / Chunk + in-chunk / Radix LSD)。ただし別物を使う選択肢もある ——例:`--simple` フラグでは Min Extraction を使い、adaptive 低 disorder レジームでは部分整列入力に強い **Insertion Sort** を使うなど。
+- **README 文書化の役割分担**。subject 要求:しきい値の根拠、各レジームの内部技法、Push_swap モデルでの時間・空間の計算量議論(上界)。誰がどの部分を書くか?(下の役割分担テーブルに暫定案あり、確認 + 細分化)
+
+> 補足:disorder 計算自体は subject VI.3.2 の pseudo-code で specified。C 翻訳時の詳細(連結リスト走査、float vs 整数比較、n ≤ 1 境界処理)は実装時の判断事項で、ミーティング議題ではない。
 
 #### 7. コード規約
 Norm 準拠、ファイル/関数命名、libft の置き場所、operation ラッパーの引数(README は `op_sa(t_stack *a, t_bench *bench, int print)` を提案)
