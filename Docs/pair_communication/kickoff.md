@@ -1,6 +1,6 @@
-# Kickoff Meeting Agenda
+# Kickoff Meeting
 
-> Status: **agenda (pre-meeting)**. After the meeting, fill in Decisions / Open questions / Action items.
+> Status: **partial post-meeting record (2026-05-26)**. Decided: Topics 1, 2, 3, 4, 5, plus partial Topic 8 (parallel branch strategy). Settled implicitly by Topic 1: Topic 6. Still pending: Topic 7, Topic 9, Topic 8 details — schedule a follow-up.
 
 ## English
 
@@ -13,97 +13,111 @@ First sync meeting after the partner shared the proposed file structure (`docs:p
 So has read the subject and reviewed the partner's plan.
 Goal: align on **algorithm selection, scope, and role split** before implementation starts.
 
-**Pre-meeting preparation by So (2026-05-20 / 2026-05-21)**: studied the Simple, Medium, and Complex tiers in depth and prepared concrete proposals for Topic 1. See `learning_log/algorithms-simple-o-n2.md`, `learning_log/algorithms-medium-o-nsqrtn.md`, and `learning_log/algorithms-complex-o-nlogn.md` for the analysis. Proposals are noted inline under Topic 1.
+**Pre-meeting preparation by So (2026-05-20 / 2026-05-21 / 2026-05-26)**: studied the Simple, Medium, Complex, and Adaptive tiers in depth and prepared concrete proposals. See `learning_log/algorithms-simple-o-n2.md`, `algorithms-medium-o-nsqrtn.md`, `algorithms-complex-o-nlogn.md`, `algorithms-adaptive.md`. Data-structure analysis in `learning_log/linked-list-design.md`.
 
-### Topics to discuss
+### Topics
 
-#### 1. Algorithm selection per tier (nothing is locked in yet)
-The skeleton proposes one specific algorithm per tier, but **the choice for each tier is still open**.
+#### 1. Algorithm selection per tier — DECIDED (2026-05-26)
 
-- **Simple O(n²)** — Selection Sort? Insertion Sort? Min Extraction? Bubble Sort?
-  > **So's proposal**: **Min Extraction** or **Insertion Sort**. Min Extraction has the lowest naive op count (~n²/4); Insertion Sort excels on partially sorted input — relevant for Adaptive's low-disorder regime. Selection (naive) and Bubble are dominated. Final pick depends on how heavily Adaptive uses Simple.
-- **Medium O(n√n)** — Chunk Sort? Block partitioning? Bucket Sort with √n buckets? Range-based?
-  > **So's proposal**: **Chunk Sort with in-chunk sort**. Basic Chunk Sort risks missing the n=500 benchmark (~14,000 ops); with insertion-style in-chunk sort, ~7,000 ops (good tier) is reachable. The subject's other three names converge to Chunk Sort in push_swap's operation model.
-- **Complex O(n log n)** — Radix Sort? Merge Sort (2-stack)? Quick Sort (partition)? Heap Sort? BIT?
-  > Radix is the skeleton's proposal, **but not yet decided**.
-  > **So's proposal**: **Radix Sort (LSD, binary)**. Best match for push_swap's instruction set (`pb` / `ra` / `pa` map directly to bit-based bucketing). Reaches the excellent benchmark band (~4,500–6,000 ops at n=500). Requires coordinate compression to fix the bit count at `log₂(n)` — settles Topic 5 if adopted. Quick Sort is a workable backup; Merge / Heap / BIT are impractical (Heap fails to achieve O(n log n) in the operation model; BIT isn't a sorting algorithm).
-- **Adaptive** — given the picks above, how does the dispatcher compose them per disorder regime?
+- **Simple O(n²)** → **Insertion Sort**. Strong on partially sorted input; `--simple` and Adaptive's low-disorder regime call the same algorithm. (Reference: `learning_log/algorithms-simple-o-n2.md`)
+- **Medium O(n√n)** → **Chunk Sort with in-chunk sort**. (Reference: `learning_log/algorithms-medium-o-nsqrtn.md`)
+- **Complex O(n log n)** → **Radix Sort LSD (binary)**. Requires coordinate compression (see Topic 5). (Reference: `learning_log/algorithms-complex-o-nlogn.md`)
+- **Adaptive** → Dispatcher calls the tier algorithm directly per regime. No algorithm differentiation needed (Simple = Insertion Sort already handles low disorder well). (Reference: `learning_log/algorithms-adaptive.md`)
 
-#### 2. Extras beyond subject requirements
-The subject does not require these — they are optimizations.
+#### 2. Extras beyond subject requirements — DECIDED (2026-05-26)
 
-- **mini_sort (sort_2 / sort_3 / sort_5)** — hardcoded optimal sorts for tiny inputs. Not in subject. Implement? (Often needed to hit excellent-tier benchmarks, and useful as the base case for Chunk / Quick / Merge-style strategies.) Decision affects scope and role split.
-- Any other polish to flag (e.g., per-bit optimizations in Complex)?
+- **mini_sort (sort_2 / sort_3 / sort_5)** → **NOT IMPLEMENTED**. Out of subject scope; focus on the four mandatory tiers.
+- No other polish flagged at this time.
 
-#### 3. Role division (depends on #1 and #2)
-See the draft table below — drafter assignments will be revised after the algorithm choices are confirmed.
+#### 3. Role division — DECIDED (2026-05-26)
 
-#### 4. Data structure
-The README proposes a doubly linked list with `t_node {value, index, next, prev}` and `t_stack {top, size}`. Open questions:
-- Should `t_stack` also hold `tail` (to make `rotate` / `reverse rotate` O(1) internally)?
-- Did we consider a circular doubly linked list? Trade-off vs. plain doubly linked + tail?
+See the updated role table below. Phase 1 and Phase 2 follow a **parallel-draft-then-compare** workflow: both partners independently draft their own version, then compare and merge into a final version. Algorithm tiers: Simple & Medium → Javier; Complex → So.
 
-#### 5. Input pre-processing (conditional on Topic 1)
-- Coordinate compression maps values to `0..n-1`. **Strictly needed only if we pick Radix** (so the bit count = `log₂(n)`).
-- Merge / Quick / Heap don't strictly require compression — though indexes can still simplify code.
-- Final decision depends on the Complex choice in Topic 1.
+#### 4. Data structure — DECIDED (2026-05-26)
 
-#### 6. Adaptive design (thresholds are fixed by subject VI.3.3 #4)
-The subject **mandates** the regimes:
-- `disorder < 0.2` → must run in **O(n²)**
-- `0.2 ≤ disorder < 0.5` → must run in **O(n√n)**
-- `disorder ≥ 0.5` → must run in **O(n log n)**
+**Option A: doubly linked list + `tail` pointer.**
 
-What's actually open for us to decide:
-- **Which internal algorithm in each regime.** Default = our Topic 1 picks (Min Extraction / Chunk+in-chunk / Radix LSD). But we could differ — e.g., use **Insertion Sort** for the low-disorder regime even if `--simple` runs Min Extraction, because Insertion is much faster on partially sorted input.
-- **README documentation responsibility.** Subject requires us to document: rationale for the thresholds, internal techniques per regime, and a complexity argument (upper bounds) for time and space in the Push_swap model. Who writes which part? (Tentative split in the role table below; confirm and break down further.)
+- `t_node` holds `value`, `index`, `next`, `prev`
+- `t_stack` holds `top`, `tail`, `size`
 
-> Note: The disorder calculation itself is specified by the subject VI.3.2 pseudo-code. C translation details (linked-list traversal, float vs integer comparison, n ≤ 1 boundary) are implementation choices, not meeting topics.
+Justification in `learning_log/linked-list-design.md`: makes every push_swap operation O(1) without the bug-prone cycle detection of Option B (circular doubly linked). Whether `t_stack` holds `a` and `b` together or as separate instances is a follow-up implementation detail.
 
-#### 7. Code conventions
+#### 5. Input pre-processing — DECIDED (2026-05-26)
+
+**Approach A: apply coordinate compression at parser stage for all tiers.** All algorithms operate on `t_node->index` rather than `value`.
+
+| Tier / use | Status |
+| --- | --- |
+| Complex (Radix LSD) | **Required** — fixes bit count at `⌈log₂(n)⌉`. |
+| Medium (Chunk Sort) | **Useful** — chunk boundaries become uniform slices of `[0, n)`. |
+| Simple (Insertion Sort) | **Order-preserving** — `index` comparisons give the same result as `value` comparisons. |
+| Adaptive disorder calculation | **Order-preserving** — works the same on indices. |
+
+Implementation belongs to Phase 1 (parser stage). Cost is one-time O(n log n) on the C side and generates **zero push_swap operations**, so it doesn't affect the subject's complexity measurement.
+
+#### 6. Adaptive design — SETTLED BY TOPIC 1
+
+With Simple = Insertion Sort, the dispatcher simply calls the tier algorithm in each regime. The subject-required README documentation (rationale for thresholds, internal techniques per regime, complexity argument) still needs writing — see the role table.
+
+#### 7. Code conventions — PENDING
 Norm, file/function naming, where libft sits, operation wrapper signature (the README suggests `op_sa(t_stack *a, t_bench *bench, int print)`).
 
-#### 8. Git workflow
-Branch strategy (feature branches?), review process, commit message format.
+#### 8. Git workflow — PARTIALLY DECIDED (2026-05-26)
 
-#### 9. Milestones
+**Decided**: for the parallel-draft phases (Phase 1, Phase 2), **each partner creates their own branch** and works on their version independently. Comparison and merge happen afterward.
+
+**Pending**: branch naming convention, review process, commit message format, merge strategy for non-parallel phases, where the final-version branch lives.
+
+#### 9. Milestones — PENDING
 Target dates for each phase (counting back from the campus deadline).
 
 ### Three "why?" questions we both must be able to answer (required for defense)
 
-Tier-agnostic — the specific answers fill in once Topic 1 is settled.
+- Why **doubly linked list + `tail` pointer** (vs an array, singly linked, or circular doubly)? → all 11 push_swap operations stay O(1); rotation/reverse-rotation preserve cross-element order through cyclic shifts; clearer to debug than circular (`NULL` as end marker vs cycle-detection loops). See `learning_log/linked-list-design.md`.
+- What **input pre-processing** do we apply — and why? → **Coordinate compression at parser stage for all tiers** (Approach A). Required for Radix LSD (fixes bit count at `log₂(n)`); useful for Medium (uniform chunks); order-preserving so no harm for Simple.
+- Why does **each chosen algorithm** achieve its claimed complexity class **in the push_swap operation model**? — concrete arguments needed for Insertion Sort, Chunk Sort + in-chunk sort, Radix LSD, and the Adaptive dispatcher.
 
-- Why our chosen **data structure** (vs an array, vs other linked-list variants)?
-- What **input pre-processing** does our chosen Complex algorithm require — and why?
-- Why does **each of our 4 chosen algorithms** achieve its claimed complexity class **in the push_swap operation model** (not the textbook array model)?
+### Role split (DECIDED 2026-05-26)
 
-### Proposed role split (DRAFT — pending Topics 1 & 2)
+| Phase | Drafter | Workflow / Notes |
+| --- | --- | --- |
+| 1: stack / parser base **(incl. coordinate compression)** | both | parallel draft on separate branches → compare → final version |
+| 2: 11 operations | both | parallel draft on separate branches → compare → final version |
+| 4: Simple (Insertion Sort) | **Javier** | |
+| 5: Medium (Chunk Sort + in-chunk sort) | **Javier** | |
+| 6: Complex (Radix LSD) | **So** | coord compression handled in Phase 1 |
+| 7: Adaptive (dispatcher) | both | small enough to co-build |
+| 8: Benchmark | So → `disorder.c`; Javier → `benchmark.c`, op counter | |
+| README | So → algo complexity argument; Javier → data structure & overview; both → integration | |
 
-> Note: Algorithm names below reflect the partner's skeleton (selection/min_extract, chunk, radix). They are **tentative** and will be revised after the algorithm choices are confirmed.
+> Phase 3 (mini_sort) removed since extras are excluded (Topic 2).
 
-| Phase | So (drafter) | Javier (drafter) | Co-build |
-| --- | --- | --- | --- |
-| 1: stack / parser base | | | ◯ |
-| 2: 11 operations | | | ◯ |
-| 3: mini_sort *(only if Topic 2 says yes)* | sort_5 | sort_2, sort_3 | |
-| 4: Simple | (TBD) | (TBD) | |
-| 5: Medium | | (TBD body) | size / policy |
-| 6: Complex | (TBD core loop) | (pre-processing if any) | complexity argument |
-| 7: Adaptive | | | ◯ thresholds + rationale |
-| 8: Benchmark | disorder.c | benchmark.c, op counter | |
-| README | algo complexity argument | data structure & overview | integration |
+Rationale: drafters split, but every piece is **co-reviewed** — both must be able to explain any line during defense (subject IX).
 
-Rationale: drafters split, but every piece is **co-reviewed** — both must explain any line in defense (subject IX).
+### Decisions (2026-05-26)
 
-### Decisions
-*(fill after meeting)*
+- **Topic 1 — Algorithms**: Simple = Insertion Sort; Medium = Chunk Sort + in-chunk sort; Complex = Radix Sort LSD (binary); Adaptive = direct dispatch to tier algorithms.
+- **Topic 2 — Extras**: mini_sort not implemented.
+- **Topic 3 — Role split**: as in the table above. Phase 1 & 2 use parallel-draft-then-compare workflow.
+- **Topic 4 — Data structure**: Option A — doubly linked + `tail` pointer.
+- **Topic 5 — Input pre-processing**: Approach A — apply coordinate compression at parser stage for all tiers. All algorithms operate on `t_node->index`.
+- **Topic 8 (partial) — Git workflow**: parallel phases (1, 2) use one branch per partner. Other Git policy details pending.
+- **Implied settlements**: Topic 6 (no algorithm differentiation needed in Adaptive).
 
-### Open questions
-*(fill after meeting)*
+### Open questions / remaining
+
+- **Topic 7 — Code conventions**: Norm, naming, wrapper signature.
+- **Topic 8 (details) — Git workflow**: branch naming convention, review process, commit message format, merge strategy for non-parallel phases, where the final-version branch lives.
+- **Topic 9 — Milestones**: deadline + phase target dates.
+- **Data-structure follow-up**: does `t_stack` hold `a` and `b` together, or as separate instances? (Implementation detail; decide before Phase 1 implementation.)
+- **README writing breakdown**: how documentation is split in finer detail.
 
 ### Action items
-*(fill after meeting)*
-- [ ] (owner) ... — due YYYY-MM-DD
+
+- [ ] Both: create your own Git branch for Phase 1 work (parallel-draft begins).
+- [ ] So: plan Phase 6 implementation (Radix LSD; coord compression already provided by Phase 1).
+- [ ] Javier: plan Phase 4 (Insertion Sort) and Phase 5 (Chunk Sort + in-chunk sort).
+- [ ] Both: schedule a follow-up meeting to resolve Topic 7, Topic 9, and Topic 8 details.
 
 ---
 
@@ -118,94 +132,108 @@ Rationale: drafters split, but every piece is **co-reviewed** — both must expl
 So は subject を読み、相方のプランをレビュー済み。
 実装着手前に **アルゴリズム選定・スコープ・役割分担** を合意するのが目的。
 
-**So の事前準備(2026-05-20 / 2026-05-21)**:Simple、Medium、Complex tier のアルゴリズムを詳しく調査し、Topic 1 に向けた具体的な提案を準備済み。分析内容は `learning_log/algorithms-simple-o-n2.md`、`learning_log/algorithms-medium-o-nsqrtn.md`、`learning_log/algorithms-complex-o-nlogn.md` を参照。提案内容は Topic 1 の各 tier に併記。
+**So の事前準備(2026-05-20 / 2026-05-21 / 2026-05-26)**:Simple、Medium、Complex、Adaptive tier すべてを詳しく調査し、Topic 1 への提案を準備済み。分析内容は `learning_log/algorithms-simple-o-n2.md`、`algorithms-medium-o-nsqrtn.md`、`algorithms-complex-o-nlogn.md`、`algorithms-adaptive.md` を参照。データ構造の分析は `learning_log/linked-list-design.md`。
 
 ### 議題
 
-#### 1. 各 tier のアルゴリズム選定(いずれもまだ確定していない)
-スケルトンは tier ごとに 1 つの具体的アルゴリズムを提案しているが、**各 tier の選択はまだ未確定**。
+#### 1. 各 tier のアルゴリズム選定 — DECIDED(2026-05-26)
 
-- **Simple O(n²)** — Selection Sort? Insertion Sort? Min Extraction? Bubble Sort?
-  > **So の提案**:**Min Extraction** または **Insertion Sort**。Min Extraction は naive な操作数が最少(~n²/4)、Insertion Sort は部分整列入力で圧倒的に速い(Adaptive の低 disorder レジームで活きる)。Selection(naive)と Bubble は他に劣り却下。最終選択は Adaptive で Simple をどう使うかによる。
-- **Medium O(n√n)** — Chunk Sort? Block partitioning? √n バケットの Bucket Sort? 範囲ベース?
-  > **So の提案**:**Chunk Sort + in-chunk sort**。basic な Chunk Sort のみだと n=500 のベンチライン(<12,000 ops)を割る恐れあり(~14,000 ops 想定)。insertion 流の in-chunk sort を入れれば ~7,000 ops(good tier)まで詰まる。subject の他 3 つの名前は push_swap の操作モデル上 Chunk Sort に収束する。
-- **Complex O(n log n)** — Radix Sort? 2-stack の Merge Sort? Quick Sort(partition)? Heap Sort? BIT?
-  > Radix はスケルトンの提案だが、**まだ採用が確定していない**。
-  > **So の提案**:**Radix Sort(LSD、2 進)**。push_swap の命令セットと相性最良(`pb` / `ra` / `pa` が bit ベースの振り分けに直接対応)。n=500 で excellent 圏(約 4,500〜6,000 ops)に届く。**座標圧縮が必須**(bit 数を `log₂(n)` に固定するため)—— 採用すれば Topic 5 も同時に決まる。Quick Sort は代替案として可。Merge / Heap / BIT は非現実的(特に Heap は操作モデル上 O(n log n) を達成できない、BIT はそもそも算法ではない)。
-- **Adaptive** — 上記の選定を踏まえ、disorder のレジームごとに何をどう呼ぶか
+- **Simple O(n²)** → **Insertion Sort**。部分整列入力に強く、`--simple` フラグと Adaptive の低 disorder レジームで同じ algorithm を呼ぶ。(参照:`learning_log/algorithms-simple-o-n2.md`)
+- **Medium O(n√n)** → **Chunk Sort + in-chunk sort**。(参照:`learning_log/algorithms-medium-o-nsqrtn.md`)
+- **Complex O(n log n)** → **Radix Sort LSD(2 進)**。座標圧縮が必須(Topic 5 参照)。(参照:`learning_log/algorithms-complex-o-nlogn.md`)
+- **Adaptive** → ディスパッチャは各レジームで対応する tier algorithm を直接呼ぶ。algorithm の差別化は不要(Simple = Insertion Sort が低 disorder にも適している)。(参照:`learning_log/algorithms-adaptive.md`)
 
-#### 2. 課題要件外の実装(extras)を入れるか
-subject の要件にはない最適化。
+#### 2. 課題要件外の実装(extras) — DECIDED(2026-05-26)
 
-- **mini_sort(sort_2 / sort_3 / sort_5)** — 極小入力用のハードコード最適ソート。subject 要件にはない。実装する?(excellent ベンチ達成にはしばしば必要。また Chunk / Quick / Merge 系の base case としても使える)スコープと役割分担にも影響
-- その他、議論しておきたい polish はあるか(Complex の bit 単位最適化など)
+- **mini_sort(sort_2 / sort_3 / sort_5)** → **実装しない**。subject 範囲外、4 つの必須 tier に集中する。
+- 他に flag したい polish は現時点でなし。
 
-#### 3. 役割分担(Topic 1, 2 が決まってから)
-下のたたき台テーブル参照。下書き担当はアルゴリズム選定確定後に見直す。
+#### 3. 役割分担 — DECIDED(2026-05-26)
 
-#### 4. データ構造
-README は双方向連結リスト(`t_node {value, index, next, prev}`, `t_stack {top, size}`)を提案。要確認:
-- `t_stack` に `tail` を持たせる?(内部で `rotate`/`reverse rotate` を O(1) にするため)
-- 循環双方向リストは検討した?素の双方向 + tail とのトレードオフは?
+下の更新された役割分担テーブル参照。Phase 1 と Phase 2 は **「各自並行ドラフト → 比較 → 統合」**ワークフロー:両者が独立して自分版を書き、比較して最終版を作る。アルゴリズム tier:Simple と Medium → Javier、Complex → So。
 
-#### 5. 入力の前処理(Topic 1 に依存)
-- 座標圧縮は値を `0..n-1` に写す。**Radix を選んだ場合にのみ必須**(bit 数を `log₂(n)` に固定するため)
-- Merge / Quick / Heap は厳密には不要(index があるとコードが楽になる程度)
-- Topic 1 の Complex 選定結果による
+#### 4. データ構造 — DECIDED(2026-05-26)
 
-#### 6. Adaptive 設計(しきい値は subject VI.3.3 #4 で固定)
-subject が**規定**:
-- `disorder < 0.2` → **O(n²)** で動作すること
-- `0.2 ≤ disorder < 0.5` → **O(n√n)** で動作すること
-- `disorder ≥ 0.5` → **O(n log n)** で動作すること
+**Option A:双方向連結リスト + `tail` ポインタ**。
 
-学習者が決められるのは:
-- **各レジームで呼ぶ内部アルゴリズム**。デフォルトは Topic 1 の選定(Min Extraction / Chunk + in-chunk / Radix LSD)。ただし別物を使う選択肢もある ——例:`--simple` フラグでは Min Extraction を使い、adaptive 低 disorder レジームでは部分整列入力に強い **Insertion Sort** を使うなど。
-- **README 文書化の役割分担**。subject 要求:しきい値の根拠、各レジームの内部技法、Push_swap モデルでの時間・空間の計算量議論(上界)。誰がどの部分を書くか?(下の役割分担テーブルに暫定案あり、確認 + 細分化)
+- `t_node` は `value`, `index`, `next`, `prev` を持つ
+- `t_stack` は `top`, `tail`, `size` を持つ
 
-> 補足:disorder 計算自体は subject VI.3.2 の pseudo-code で specified。C 翻訳時の詳細(連結リスト走査、float vs 整数比較、n ≤ 1 境界処理)は実装時の判断事項で、ミーティング議題ではない。
+根拠は `learning_log/linked-list-design.md` 参照:Option B(循環双方向)の cycle 検出によるバグリスクなしに、push_swap の全 11 命令を O(1) で実行できる。`t_stack` で a と b を統合するか別 instance にするかは実装時の詳細(下記の follow-up 項目)。
 
-#### 7. コード規約
-Norm 準拠、ファイル/関数命名、libft の置き場所、operation ラッパーの引数(README は `op_sa(t_stack *a, t_bench *bench, int print)` を提案)
+#### 5. 入力の前処理 — DECIDED(2026-05-26)
 
-#### 8. Git 運用
-ブランチ戦略(feature ブランチ?)、レビュー方法、コミットメッセージ形式
+**Approach A:parser stage で全 tier に座標圧縮を適用**。全アルゴリズムは `value` ではなく `t_node->index` で動作する。
 
-#### 9. マイルストーン
-各 Phase の目標期日(キャンパス締切から逆算)
+| Tier / 用途 | 座標圧縮の位置付け |
+| --- | --- |
+| Complex (Radix LSD) | **必須** —— bit 数を `⌈log₂(n)⌉` に固定するため。 |
+| Medium (Chunk Sort) | **有用** —— chunk 境界が `[0, n)` の均等分割になる。 |
+| Simple (Insertion Sort) | **順序保存** —— `index` 比較と `value` 比較は同じ結果。 |
+| Adaptive disorder 計算 | **順序保存** —— index で計算しても結果同じ。 |
+
+実装は Phase 1(parser stage)で行う。コストは C 側で一回限り O(n log n)、**push_swap 操作は 0 個生成**するので subject の計算量測定には影響しない。
+
+#### 6. Adaptive 設計 — SETTLED BY TOPIC 1
+
+Simple = Insertion Sort なので、ディスパッチャは各レジームで対応する tier algorithm を呼ぶだけ。subject 要求の README 文書化(しきい値の根拠、各レジームの内部技法、計算量議論)は別途必要 ——役割分担テーブル参照。
+
+#### 7. コード規約 — PENDING
+Norm 準拠、ファイル/関数命名、libft の置き場所、operation ラッパーの引数(README は `op_sa(t_stack *a, t_bench *bench, int print)` を提案)。
+
+#### 8. Git 運用 — PARTIALLY DECIDED(2026-05-26)
+
+**決定**:並行ドラフトの Phase(Phase 1、Phase 2)では **各自が自分のブランチを作成**して独立に作業する。比較と統合は後で行う。
+
+**未決定**:ブランチ命名規則、レビュープロセス、コミットメッセージ形式、並行 Phase 以外でのマージ戦略、最終版ブランチの置き場所。
+
+#### 9. マイルストーン — PENDING
+各 Phase の目標期日(キャンパス締切から逆算)。
 
 ### 「3つのなぜ?」(両者が説明できる必要 = ディフェンス必須)
 
-tier 非依存の形に整理。具体的な答えは Topic 1 確定後に埋まる。
+- なぜ **双方向連結リスト + `tail` ポインタ**(配列・単方向・循環双方向ではなく)? → push_swap の全 11 命令が O(1) のまま、回転/逆回転で循環シフトとして要素間の相対順序が保たれる、循環双方向よりデバッグしやすい(終端が `NULL` で明示的、サイクル検出ループ不要)。詳細は `learning_log/linked-list-design.md`。
+- 採用する **入力の前処理** は何か、なぜか? → **parser stage で全 tier に座標圧縮**(Approach A)。Radix LSD で必須(bit 数を `log₂(n)` に固定)、Medium で有用(均等チャンク化)、Simple では順序保存で害なし。
+- 採用する **4 つのアルゴリズム** それぞれが、**push_swap 操作モデル** で主張する計算量クラスを満たす理由は? ——Insertion Sort / Chunk Sort + in-chunk sort / Radix LSD / Adaptive dispatcher について具体的な議論が必要。
 
-- 採用する **データ構造** を選んだ理由は?(配列・他のリスト変種ではなく)
-- 採用する Complex に **入力の前処理** がなぜ必要か(または不要か)?
-- 採用する **4 つのアルゴリズム** それぞれが、**push_swap 操作モデル** で主張する計算量クラスを満たす理由は?(教科書の配列モデルではなく)
+### 役割分担(DECIDED 2026-05-26)
 
-### 役割分担のたたき台(DRAFT — Topic 1, 2 で再調整)
+| Phase | 下書き担当 | ワークフロー / 備考 |
+| --- | --- | --- |
+| 1: stack / parser 基盤 **(座標圧縮含む)** | 両者 | 別々のブランチで並行ドラフト → 比較 → 統合 |
+| 2: 11 個の operations | 両者 | 別々のブランチで並行ドラフト → 比較 → 統合 |
+| 4: Simple (Insertion Sort) | **Javier** | |
+| 5: Medium (Chunk Sort + in-chunk sort) | **Javier** | |
+| 6: Complex (Radix LSD) | **So** | 座標圧縮は Phase 1 で実装 |
+| 7: Adaptive(ディスパッチャ) | 両者 | 規模が小さいので共同 |
+| 8: Benchmark | So → `disorder.c`、Javier → `benchmark.c`、op counter | |
+| README | So → アルゴリズム計算量議論、Javier → データ構造・全体構成、両者 → 統合 | |
 
-> 注:下表のアルゴリズム名は相方のスケルトン(selection/min_extract, chunk, radix)を反映した **暫定** のもの。アルゴリズム選定確定後に再調整する。
-
-| Phase | So(下書き) | Javier(下書き) | 共同 |
-| --- | --- | --- | --- |
-| 1: stack / parser 基盤 | | | ◯ |
-| 2: 11 個の operations | | | ◯ |
-| 3: mini_sort *(Topic 2 で採用と決まれば)* | sort_5 | sort_2, sort_3 | |
-| 4: Simple | (TBD) | (TBD) | |
-| 5: Medium | | (TBD 本体) | サイズ・方針 |
-| 6: Complex | (TBD コアループ) | (前処理が必要な場合) | 計算量の議論 |
-| 7: Adaptive | | | ◯ しきい値 + 根拠 |
-| 8: Benchmark | disorder.c | benchmark.c, op counter | |
-| README | アルゴリズム計算量議論 | データ構造・全体構成 | 統合 |
+> Phase 3(mini_sort)は extras 除外のため削除(Topic 2)。
 
 根拠: 下書きは分担するが、各ピースは **必ず相互レビュー**。両者がどの行でも説明できる状態にする(subject IX)。
 
-### 決定事項
-*(ミーティング後に記入)*
+### 決定事項(2026-05-26)
+
+- **Topic 1 — アルゴリズム**:Simple = Insertion Sort、Medium = Chunk Sort + in-chunk sort、Complex = Radix Sort LSD(2 進)、Adaptive = tier algorithm への直接ディスパッチ。
+- **Topic 2 — Extras**:mini_sort 実装しない。
+- **Topic 3 — 役割分担**:上記テーブル通り。Phase 1 & 2 は並行ドラフト → 比較 → 統合ワークフロー。
+- **Topic 4 — データ構造**:Option A —— 双方向連結リスト + `tail` ポインタ。
+- **Topic 5 — 入力前処理**:Approach A —— parser stage で全 tier に座標圧縮を適用。全アルゴリズムは `t_node->index` で動作。
+- **Topic 8(部分)— Git 運用**:並行 Phase(1, 2)は各自 1 ブランチ。その他の Git 方針は未決定。
+- **間接的に決定したもの**:Topic 6(Adaptive で algorithm 差別化不要)。
 
 ### 未解決事項
-*(ミーティング後に記入)*
+
+- **Topic 7 — コード規約**:Norm、命名、ラッパー署名。
+- **Topic 8(詳細)— Git 運用**:ブランチ命名規則、レビュープロセス、コミットメッセージ形式、並行 Phase 以外のマージ戦略、最終版ブランチの置き場所。
+- **Topic 9 — マイルストーン**:締切と各 Phase の目標期日。
+- **データ構造の follow-up**:`t_stack` で a と b を統合するか、別 instance にするか?(実装詳細、Phase 1 実装前に決定)
+- **README 執筆の細分化**:文書化の分担をもう一段細かく。
 
 ### 次のアクション
-*(ミーティング後に記入)*
-- [ ] (担当) ... 期限 YYYY-MM-DD
+
+- [ ] 両者:Phase 1 用の自分のブランチを作成(並行ドラフト開始)。
+- [ ] So:Phase 6(Radix LSD)の実装計画。座標圧縮は Phase 1 で提供される。
+- [ ] Javier:Phase 4(Insertion Sort)と Phase 5(Chunk Sort + in-chunk sort)の実装計画。
+- [ ] 両者:Topic 7、Topic 9、Topic 8 の詳細を解決するための follow-up ミーティング日程調整。
