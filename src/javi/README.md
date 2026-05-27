@@ -1,115 +1,217 @@
-# Push Swap Parser TODO List
+# Push Swap Parser Implementation Plan
 
 ---
 
-# 1. parse_args(int argc, char **argv, t_stack *a)
+# Phase 1 — Base Structures
 
-## Description
+Before implementing the parser, create the core data structures:
 
-Main parser function.
+```c
+typedef struct s_node
+{
+	int				value;
+	int				index;
+	struct s_node	*next;
+	struct s_node	*prev;
+}	t_node;
+
+typedef struct s_stack
+{
+	t_node	*top;
+	t_node	*bottom;
+	int		size;
+}	t_stack;
+```
+
+You also need the strategy enum:
+
+```c
+typedef enum e_strategy
+{
+	STRATEGY_ADAPTIVE,
+	STRATEGY_SIMPLE,
+	STRATEGY_MEDIUM,
+	STRATEGY_COMPLEX
+}	t_strategy;
+```
+
+The parser depends on these structures because its final job is to create stack `a`.
+
+---
+
+# Phase 2 — Main Parser Function
+
+Implement:
+
+```c
+int	parse_args(int argc, char **argv,
+				t_stack *a,
+				t_strategy *strategy);
+```
 
 Responsibilities:
 
-- Receive `argc` and `argv`
-- Detect how arguments were passed
-- Get all tokens
-- Validate tokens
-- Convert tokens into numbers
-- Check duplicates
-- Create stack `a`
+1. Handle `argc == 1`
+2. Detect strategy flags
+3. Extract numeric arguments
+4. Split arguments into tokens
+5. Validate tokens
+6. Convert tokens into integers
+7. Check duplicates
+8. Build stack `a`
+9. Run coordinate compression
 
-This function controls the entire parsing process.
+After this function succeeds, `stack_a` should be fully initialized and ready for sorting.
 
 ---
 
-# 2. get_tokens(int argc, char **argv)
+# Phase 3 — Strategy Flags
 
-## Description
+Create a helper function:
 
-Creates a final list of strings (tokens).
+```c
+int	parse_strategy(char *arg, t_strategy *strategy);
+```
+
+Recognized flags:
+
+```txt
+--simple
+--medium
+--complex
+--adaptive
+```
+
+Recommended rules:
+
+- multiple flags → Error
+- unknown flags → Error
+- no flag → STRATEGY_ADAPTIVE
+
+---
+
+# Phase 4 — Token Extraction
+
+Create:
+
+```c
+char	**get_tokens(int argc, char **argv);
+```
+
+This function converts every valid input format into the same token list.
 
 Examples:
 
 ```bash
-./push_swap 3 2 1
+./push_swap 3 1 2
 ```
 
-Produces:
-
-```txt
-"3" "2" "1"
-```
-
----
+and
 
 ```bash
-./push_swap "3 2 1"
+./push_swap "3 1 2"
 ```
 
-Also produces:
+must both produce:
 
 ```txt
-"3" "2" "1"
+"3" "1" "2"
 ```
 
-The goal is to always get a clean list of tokens regardless of how the arguments were passed.
+The sorting logic should not care how the arguments were originally passed.
 
 ---
 
-# 3. is_valid_token(char *str)
+# Phase 5 — Token Validation
 
-## Description
+Create:
 
-Checks if a token is a valid number.
+```c
+int	is_valid_token(char *str);
+```
 
 Valid examples:
 
 ```txt
-"42"
-"-42"
-"+42"
-"0"
+42
+-42
++42
+0
 ```
 
 Invalid examples:
 
 ```txt
 ""
-"-"
-"+"
-"--42"
-"42a"
-"4-2"
+-
++
+--42
+42a
+4-2
 ```
 
-This function only checks the format of the string.
+This function only checks if the string format represents a valid integer.
 
 ---
 
-# 4. ft_atol_safe(char *str)
+# Phase 6 — Safe Integer Conversion
 
-## Description
+Create:
 
-Converts a string into a `long`.
+```c
+long	ft_atol_safe(char *str);
+```
 
-Used to detect overflow before converting to `int`.
+Convert the token into a `long`.
 
-Example:
+After conversion:
 
 ```c
 if (num < INT_MIN || num > INT_MAX)
-	error_exit();
+	return (ERROR);
 ```
 
-This prevents invalid integer values.
+This prevents integer overflow and invalid values.
 
 ---
 
-# 5. has_duplicate(t_stack *a, int value)
+# Phase 7 — Stack Construction
 
-## Description
+Create:
 
-Checks if a number already exists in the stack.
+```c
+int	stack_add_back(t_stack *a, int value);
+```
+
+This function creates a new node and appends it to stack `a`.
+
+Example:
+
+```bash
+./push_swap 4 2 8
+```
+
+Stack result:
+
+```txt
+top -> 4
+       2
+       8
+```
+
+The first argument must become the top of the stack.
+
+---
+
+# Phase 8 — Duplicate Detection
+
+Start with a simple implementation:
+
+```c
+int	has_duplicate(t_stack *a, int value);
+```
+
+Before inserting a number, scan the stack to see if it already exists.
 
 Example:
 
@@ -123,309 +225,78 @@ Should produce:
 Error
 ```
 
-because duplicate values are forbidden.
+Later you can optimize duplicate detection using arrays and sorting.
 
 ---
 
-# 6. stack_add_back(t_stack *a, int value)
+# Phase 9 — Coordinate Compression
 
-## Description
+After building stack `a`, run:
 
-Creates a new node and adds it to stack `a`.
+```c
+coord_compress(a);
+```
+
+Each node should now contain:
+
+```c
+node->value
+node->index
+```
 
 Example:
 
-```bash
-./push_swap 4 2 8
+```txt
+42 -5 100 2
 ```
 
-Stack:
+Becomes:
 
 ```txt
-top -> 4
-       2
-       8
+2 0 3 1
 ```
 
-The first argument must become the top of the stack.
+Coordinate compression makes radix sort much easier.
 
 ---
 
-# 7. free_tokens(char **tokens)
-
-## Description
-
-Frees the memory created by `ft_split`.
-
-Very important to avoid memory leaks.
-
----
-
-# 8. error_exit(t_stack *a, char **tokens)
-
-## Description
-
-Handles program errors.
-
-Responsibilities:
-
-- Free allocated memory
-- Print `"Error\n"` to stderr
-- Exit the program
-
-Example:
-
-```c
-write(2, "Error\n", 6);
-exit(1);
-```
-
----
-
-# Recommended Parser Flow
+# Recommended Implementation Order
 
 ```txt
-argc / argv
-↓
-get_tokens()
-↓
-validate tokens
-↓
-convert to numbers
-↓
-check overflow
-↓
-check duplicates
-↓
-create stack A
+1. t_node / t_stack
+2. stack_init
+3. stack_add_back
+4. free_stack
+5. is_valid_token
+6. ft_atol_safe
+7. get_tokens
+8. parse_strategy
+9. parse_args
+10. duplicate check
+11. coord_compress
+12. tests
 ```
 
 ---
 
-# Important Advice
+# Important Design Advice
 
-Do not write the parser in one giant function.
+The parser should NOT:
 
-Small functions are:
+- sort numbers
+- perform radix sort
+- calculate chunks
+- generate operations
 
-- easier to debug
-- easier to explain
-- easier to maintain
-- better for Norminette
-
-================================================================================
-
-# push_swap パーサー TODO リスト
-
----
-
-# 1. parse_args(int argc, char **argv, t_stack *a)
-
-## 説明
-
-メインのパーサー関数。
-
-役割:
-
-- `argc` と `argv` を受け取る
-- 引数の渡し方を判定する
-- すべてのトークンを取得する
-- トークンを検証する
-- 数値へ変換する
-- 重複を確認する
-- stack `a` を作成する
-
-パース処理全体を管理する関数。
-
----
-
-# 2. get_tokens(int argc, char **argv)
-
-## 説明
-
-最終的な文字列リスト（トークン）を作成する関数。
-
-例:
-
-```bash
-./push_swap 3 2 1
-```
-
-結果:
+The parser's only responsibility is:
 
 ```txt
-"3" "2" "1"
+argv -> validated stack_a
 ```
 
----
+After parsing finishes successfully, the sorting algorithms can safely assume that:
 
-```bash
-./push_swap "3 2 1"
-```
-
-結果:
-
-```txt
-"3" "2" "1"
-```
-
-引数の渡し方に関係なく、同じ形式のトークン配列を作ることが目的。
-
----
-
-# 3. is_valid_token(char *str)
-
-## 説明
-
-トークンが正しい数値か確認する関数。
-
-有効な例:
-
-```txt
-"42"
-"-42"
-"+42"
-"0"
-```
-
-無効な例:
-
-```txt
-""
-"-"
-"+"
-"--42"
-"42a"
-"4-2"
-```
-
-この関数では文字列の形式のみ確認する。
-
----
-
-# 4. ft_atol_safe(char *str)
-
-## 説明
-
-文字列を `long` に変換する関数。
-
-`int` に変換する前にオーバーフローを検出するために使う。
-
-例:
-
-```c
-if (num < INT_MIN || num > INT_MAX)
-	error_exit();
-```
-
-不正な整数値を防ぐ。
-
----
-
-# 5. has_duplicate(t_stack *a, int value)
-
-## 説明
-
-stack 内に同じ数値が既に存在するか確認する関数。
-
-例:
-
-```bash
-./push_swap 1 2 3 2
-```
-
-結果:
-
-```txt
-Error
-```
-
-push_swap では重複値は禁止されている。
-
----
-
-# 6. stack_add_back(t_stack *a, int value)
-
-## 説明
-
-新しいノードを作成して stack `a` に追加する関数。
-
-例:
-
-```bash
-./push_swap 4 2 8
-```
-
-Stack:
-
-```txt
-top -> 4
-       2
-       8
-```
-
-最初の引数が stack の top になる必要がある。
-
----
-
-# 7. free_tokens(char **tokens)
-
-## 説明
-
-`ft_split` で確保したメモリを解放する関数。
-
-メモリリーク防止のため非常に重要。
-
----
-
-# 8. error_exit(t_stack *a, char **tokens)
-
-## 説明
-
-エラー処理を行う関数。
-
-役割:
-
-- 確保したメモリを解放する
-- `"Error\n"` を stderr に出力する
-- プログラムを終了する
-
-例:
-
-```c
-write(2, "Error\n", 6);
-exit(1);
-```
-
----
-
-# 推奨パーサーフロー
-
-```txt
-argc / argv
-↓
-get_tokens()
-↓
-トークン検証
-↓
-数値変換
-↓
-オーバーフローチェック
-↓
-重複チェック
-↓
-stack A 作成
-```
-
----
-
-# 重要なアドバイス
-
-パーサーを巨大な1つの関数で書かないこと。
-
-小さい関数の方が:
-
-- デバッグしやすい
-- 説明しやすい
-- 保守しやすい
-- Norminette に適している
+- all numbers are valid
+- there are no duplicates
+- stack `a` is correctly initialized
+- indexes are already assigned
