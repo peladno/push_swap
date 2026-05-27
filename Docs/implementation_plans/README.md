@@ -4,6 +4,8 @@
 
 This directory holds **focused implementation plans for the designs adopted at the kickoff meeting**. Each file specifies WHAT to build and HOW (at the design level), without exhaustive code bodies.
 
+> **👉 Start with [`overview.md`](overview.md)** for the big-picture map: file structure, dependency graph, runtime call flow, and recommended phase order. This `README.md` covers the folder conventions only.
+
 ### Difference from `learning_log/`
 
 | | `learning_log/` | `implementation_plans/` |
@@ -35,6 +37,7 @@ See `TEMPLATE.md` to start a new plan file.
 | --- | --- | --- | --- |
 | `data-structure.md` | Topic 4 | both | 1 |
 | `coordinate-compression.md` | Topic 5 | both | 1 |
+| `parser.md` | (subject-driven) | both | 1 |
 | `simple-insertion-sort.md` | Topic 1 (Simple) | Javier | 4 |
 | `medium-chunk-sort.md` | Topic 1 (Medium) | Javier | 5 |
 | `complex-radix-lsd.md` | Topic 1 (Complex) | So | 6 |
@@ -52,6 +55,8 @@ The goal is "enough specification to start implementing and to compare with the 
 ## 日本語
 
 このディレクトリは **kickoff ミーティングで採用された設計の実装計画** を集約する場所。各ファイルは「**何を作るか・どう作るか**」を設計レベルで specify する(完全なコード本体は含まない)。
+
+> **👉 まず [`overview.md`](overview.md) を読む** —— ファイル構成、依存グラフ、実行時の呼び出しフロー、推奨 Phase 順序がまとまっている。この `README.md` はフォルダ規約のみ扱う。
 
 ### `learning_log/` との違い
 
@@ -84,6 +89,7 @@ kebab-case:例 `data-structure.md`, `complex-radix-lsd.md`。`kickoff.md` で使
 | --- | --- | --- | --- |
 | `data-structure.md` | Topic 4 | 両者 | 1 |
 | `coordinate-compression.md` | Topic 5 | 両者 | 1 |
+| `parser.md` | (subject 由来) | 両者 | 1 |
 | `simple-insertion-sort.md` | Topic 1(Simple) | Javier | 4 |
 | `medium-chunk-sort.md` | Topic 1(Medium) | Javier | 5 |
 | `complex-radix-lsd.md` | Topic 1(Complex) | So | 6 |
