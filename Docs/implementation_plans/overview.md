@@ -29,6 +29,116 @@ implementation_plans/
 └── adaptive-dispatcher.md          — Phase 7: disorder → tier dispatch
 ```
 
+### Project source layout (submitted deliverables)
+
+The proposed layout of the actual code we submit. Per-tier subfolders under `src/algorithms/` follow the partner's original skeleton; rejected items (mini_sort, multiple Simple variants) are removed.
+
+```
+push_swap/                              ← Git repo root
+├── Makefile                            top-level Makefile
+├── README.md                           project README (for graders)
+├── Docs/                               internal pair-coordination docs
+├── include/
+│   └── push_swap.h                     all types + function prototypes
+├── libft/                              libft as a subproject
+│   ├── Makefile
+│   ├── libft.h
+│   └── ... (libft sources)
+└── src/
+    ├── main.c                          entry: parse → dispatch → (bench)
+    │
+    ├── parser/                         Phase 1 — argv → validated indexed stack a
+    │   ├── parse_args.c                orchestrator
+    │   ├── validate_input.c            per-token validation
+    │   ├── check_duplicates.c
+    │   └── coordinate_compression.c
+    │
+    ├── stack/                          Phase 1 — t_stack lifecycle + primitives
+    │   ├── stack_init.c                stack_init, stack_free
+    │   └── stack_utils.c               stack_push_top, stack_pop_top
+    │
+    ├── operations/                     Phase 2 — the 11 push_swap operations
+    │   ├── swap.c                      sa, sb, ss
+    │   ├── push.c                      pa, pb
+    │   ├── rotate.c                    ra, rb, rr
+    │   ├── reverse_rotate.c            rra, rrb, rrr
+    │   └── operations_utils.c          emit_op() helper (print + bench update)
+    │
+    ├── algorithms/                     Phases 4–7
+    │   ├── simple/
+    │   │   └── insertion_sort.c        Phase 4
+    │   ├── medium/
+    │   │   └── chunk_sort.c            Phase 5
+    │   ├── complex/
+    │   │   └── radix_sort.c            Phase 6
+    │   └── adaptive/
+    │       ├── adaptive_sort.c         Phase 7 dispatcher
+    │       └── disorder.c              compute_disorder
+    │
+    ├── benchmark/                      Phase 8 — --bench output
+    │   └── benchmark.c                 stderr formatting
+    │
+    └── utils/
+        └── error_exit.c                "Error\n" + cleanup + exit
+```
+
+About 20 source files. Each file is small enough to fit Norm constraints (≤ 5 functions / ≤ 25 lines per function).
+
+### Plan ↔ source file mapping
+
+| Plan | Source files implementing it |
+| --- | --- |
+| `data-structure.md` | `include/push_swap.h` (types), `src/stack/stack_init.c`, `src/stack/stack_utils.c` |
+| `coordinate-compression.md` | `src/parser/coordinate_compression.c` |
+| `parser.md` | `src/main.c` (driver), `src/parser/parse_args.c`, `validate_input.c`, `check_duplicates.c` |
+| (Phase 2 ops — plan TBD) | `src/operations/*.c` |
+| `simple-insertion-sort.md` | `src/algorithms/simple/insertion_sort.c` |
+| `medium-chunk-sort.md` | `src/algorithms/medium/chunk_sort.c` |
+| `complex-radix-lsd.md` | `src/algorithms/complex/radix_sort.c` |
+| `adaptive-dispatcher.md` | `src/algorithms/adaptive/adaptive_sort.c`, `disorder.c` |
+| (Phase 8 — plan TBD) | `src/benchmark/benchmark.c` |
+| — (cross-cutting) | `src/utils/error_exit.c` |
+
+### `include/push_swap.h` — outline
+
+- System includes: `<stdlib.h>` (malloc/free/exit), `<unistd.h>` (write)
+- libft: `#include "libft.h"`
+- Type definitions: `t_node`, `t_stack`, `t_strategy`, `t_bench`
+- Constants (if using integer threshold comparison for disorder): `DISORDER_LOW_NUM`, `DISORDER_LOW_DEN`, etc.
+- All public function prototypes
+
+### `Makefile` — outline
+
+| Element | Value |
+| --- | --- |
+| `NAME` | `push_swap` |
+| `CC` | `cc` |
+| `CFLAGS` | `-Wall -Wextra -Werror -I include -I libft` |
+| Source list | all `src/**/*.c` |
+| Required rules | `$(NAME)`, `all`, `clean`, `fclean`, `re` |
+| Behavior | builds libft first → compiles sources → links into `push_swap`. **No unnecessary relinking** (subject II) |
+| Future | `bonus` rule for the optional `checker` program |
+
+### Submitted files (per subject VI.5 / VII)
+
+- `Makefile` at the repo root
+- `include/push_swap.h`
+- All `src/**/*.c`
+- `libft/` (with its own Makefile)
+- `README.md` at the repo root (project README per subject VII)
+
+`Docs/` is tracked in Git for pair coordination and defense support; not strictly required by subject.
+
+### Bonus (future-proofing)
+
+Subject's bonus is the `checker` program. Per common instructions, bonus files go in `*_bonus.{c/h}`. If we add it later:
+
+- `src/checker_bonus.c` (or a `src/checker/` subfolder)
+- `include/checker_bonus.h`
+- Makefile `bonus` rule
+
+Currently NOT implementing bonus (kickoff Topic 2 decision).
+
 ### Dependency graph (which plan uses which)
 
 ```
@@ -146,6 +256,116 @@ implementation_plans/
 ├── complex-radix-lsd.md            — Phase 6: Radix Sort LSD(2 進)
 └── adaptive-dispatcher.md          — Phase 7: disorder → tier ディスパッチ
 ```
+
+### プロジェクトソース構成(提出成果物)
+
+実際に提出するコードの構成案。`src/algorithms/` 下の tier 別サブフォルダは相方の元スケルトンを踏襲。除外項目(mini_sort、Simple の複数バリアント)は削除済み。
+
+```
+push_swap/                              ← Git リポジトリのルート
+├── Makefile                            トップレベル Makefile
+├── README.md                           プロジェクト README(採点者向け)
+├── Docs/                               内部ペア連携用 docs
+├── include/
+│   └── push_swap.h                     全型定義 + 関数プロトタイプ
+├── libft/                              サブプロジェクト libft
+│   ├── Makefile
+│   ├── libft.h
+│   └── ... (libft sources)
+└── src/
+    ├── main.c                          エントリ:parse → dispatch → (bench)
+    │
+    ├── parser/                         Phase 1 — argv → 検証済み index 付スタック a
+    │   ├── parse_args.c                orchestrator
+    │   ├── validate_input.c            トークン単位の検証
+    │   ├── check_duplicates.c
+    │   └── coordinate_compression.c
+    │
+    ├── stack/                          Phase 1 — t_stack のライフサイクル + primitives
+    │   ├── stack_init.c                stack_init, stack_free
+    │   └── stack_utils.c               stack_push_top, stack_pop_top
+    │
+    ├── operations/                     Phase 2 — 11 個の push_swap 命令
+    │   ├── swap.c                      sa, sb, ss
+    │   ├── push.c                      pa, pb
+    │   ├── rotate.c                    ra, rb, rr
+    │   ├── reverse_rotate.c            rra, rrb, rrr
+    │   └── operations_utils.c          emit_op() helper(print + bench 更新)
+    │
+    ├── algorithms/                     Phase 4–7
+    │   ├── simple/
+    │   │   └── insertion_sort.c        Phase 4
+    │   ├── medium/
+    │   │   └── chunk_sort.c            Phase 5
+    │   ├── complex/
+    │   │   └── radix_sort.c            Phase 6
+    │   └── adaptive/
+    │       ├── adaptive_sort.c         Phase 7 ディスパッチャ
+    │       └── disorder.c              compute_disorder
+    │
+    ├── benchmark/                      Phase 8 — --bench 出力
+    │   └── benchmark.c                 stderr 整形
+    │
+    └── utils/
+        └── error_exit.c                "Error\n" + クリーンアップ + exit
+```
+
+ソースファイル数は約 20 個。各ファイルは Norm 制約(関数 ≤ 5 / 1 関数 ≤ 25 行)に収まる粒度。
+
+### プラン ↔ ソースファイル対応
+
+| プラン | 対応するソースファイル |
+| --- | --- |
+| `data-structure.md` | `include/push_swap.h`(型)、`src/stack/stack_init.c`、`src/stack/stack_utils.c` |
+| `coordinate-compression.md` | `src/parser/coordinate_compression.c` |
+| `parser.md` | `src/main.c`(driver)、`src/parser/parse_args.c`、`validate_input.c`、`check_duplicates.c` |
+| (Phase 2 命令 — プラン未作成) | `src/operations/*.c` |
+| `simple-insertion-sort.md` | `src/algorithms/simple/insertion_sort.c` |
+| `medium-chunk-sort.md` | `src/algorithms/medium/chunk_sort.c` |
+| `complex-radix-lsd.md` | `src/algorithms/complex/radix_sort.c` |
+| `adaptive-dispatcher.md` | `src/algorithms/adaptive/adaptive_sort.c`、`disorder.c` |
+| (Phase 8 — プラン未作成) | `src/benchmark/benchmark.c` |
+| — (横断) | `src/utils/error_exit.c` |
+
+### `include/push_swap.h` — 構成
+
+- システムインクルード:`<stdlib.h>`(malloc/free/exit)、`<unistd.h>`(write)
+- libft:`#include "libft.h"`
+- 型定義:`t_node`、`t_stack`、`t_strategy`、`t_bench`
+- 定数(disorder のしきい値比較を整数で行う場合):`DISORDER_LOW_NUM`、`DISORDER_LOW_DEN` 等
+- 全 public 関数のプロトタイプ
+
+### `Makefile` — 構成
+
+| 要素 | 値 |
+| --- | --- |
+| `NAME` | `push_swap` |
+| `CC` | `cc` |
+| `CFLAGS` | `-Wall -Wextra -Werror -I include -I libft` |
+| ソースリスト | `src/**/*.c` すべて |
+| 必須ルール | `$(NAME)`、`all`、`clean`、`fclean`、`re` |
+| 挙動 | libft を先にビルド → ソースをコンパイル → `push_swap` にリンク。**不要な再リンクをしない**(subject II) |
+| 将来 | optional な `checker` 用の `bonus` ルール |
+
+### 提出ファイル(subject VI.5 / VII)
+
+- リポジトリルートの `Makefile`
+- `include/push_swap.h`
+- `src/**/*.c` すべて
+- `libft/`(独自 Makefile 含む)
+- リポジトリルートの `README.md`(subject VII のプロジェクト README)
+
+`Docs/` は Git で追跡されるがペア連携・ディフェンス補助用で、subject の必須要件ではない。
+
+### Bonus(将来の拡張余地)
+
+subject の bonus は `checker` プログラム。common instructions によるとボーナスファイルは `*_bonus.{c/h}` に置く。後で追加する場合の構成:
+
+- `src/checker_bonus.c`(または `src/checker/` サブフォルダ)
+- `include/checker_bonus.h`
+- Makefile の `bonus` ルール
+
+現時点では bonus は実装しない(kickoff Topic 2 の決定)。
 
 ### 依存グラフ(どのプランがどれを使うか)
 
