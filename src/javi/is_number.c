@@ -1,20 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_msg.c                                        :+:      :+:    :+:   */
+/*   is_number.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/27 21:32:04 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 20:23:06 by jperez-u         ###   ########.fr       */
+/*   Created: 2026/05/28 20:33:35 by jperez-u          #+#    #+#             */
+/*   Updated: 2026/05/28 21:18:08 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/push_swap.h"
 
-// TODO ft_printf???
-
-void	error_msg(void)
+int	is_number(char *str)
 {
-	write(1, "error\n", 6);
+	if (*str == '-' || *str == '+')
+		str++;
+	if (!*str)
+		return (0);
+	while (*str)
+	{
+		if (*str < '0' || *str > '9')
+			return (0);
+		str++;
+	}
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 22:14:46 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 20:15:05 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/28 21:01:07 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ int	parse_strategy(char *arg, t_strategy *strategy)
 
 int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
 {
-	int	i;
-	int	flag_count;
+	long	num;
+	int		i;
+	int		flag_count;
 
 	i = 1;
 	flag_count = 0;
@@ -49,10 +50,15 @@ int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
 		}
 		else
 		{
-			// tratar argv[i] como número o como string de números
-			// validar token
-			// convertir
-			// agregar a stack a
+			if (!is_number(argv[i]))
+				return (1);
+			num = ft_atol(argv[i]);
+			if (num < INT_MIN || num > INT_MAX)
+				return (1);
+			if (has_duplicate(a, (int)num)) // TODO
+				return (1);
+			if (!stack_add_back(a, (int)num)) // TODO
+				return (1);
 		}
 		i++;
 	}
