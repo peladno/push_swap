@@ -1,44 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   stack_free.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/28 20:10:49 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/28 20:18:29 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/28 20:18:46 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	main(int argc, char const *argv[])
+void	stack_free(t_stack *s)
 {
-	t_stack	*new_stack;
 	t_node	*current_node;
-	int		i;
-	int		j;
+	t_node	*next_node;
 
-	if (argc <= 1)
-	{
-		printf("Usage: %s <nbr> ...\n", argv[0]);
-		return (1);
-	}
-	i = 1;
-	new_stack = stack_init();
-	while (i < argc)
-	{
-		stack_push_bottom(new_stack, atoi(argv[i]), 0);
-		i++;
-	}
-	j = 0;
-	current_node = new_stack->top;
+	if (!s)
+		return ;
+	current_node = s->top;
 	while (current_node)
 	{
-		printf("[%d]%d\n", j, current_node->value);
-		current_node = current_node->next;
-		j++;
+		next_node = current_node->next;
+		free(current_node);
+		current_node = next_node;
 	}
-	stack_free(new_stack);
-	return (0);
+	free(s);
 }

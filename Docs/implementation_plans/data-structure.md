@@ -4,17 +4,21 @@
 > **Drafter**: Both (Phase 1, parallel-draft workflow)
 > **Depends on**: nothing
 > **References**: `learning_log/linked-list-design.md`, `learning_log/array&linkedlists.md`
+>
+> **M2 revisions (2026-05-28, So's branch)**:
+> - Renamed `stack_push_top` → **`stack_push_bottom`**. The parser iterates argv left-to-right and appends each new value at the tail so the **first argv token ends up on top** (subject VI.5).
+> - **Removed `stack_pop_top`**. No production code path needs it: the 11 push_swap operations rewire existing nodes directly without going through stack helpers, the parser only pushes, and cleanup uses `stack_free`. YAGNI applied.
 
 ## English
 
 ### Scope
 
 - Defines `t_node` and `t_stack` types
-- Stack-level helpers: init, push-at-top, pop-from-top, free, plus simple inspectors
-- Used by every push_swap operation and every algorithm tier
+- Stack-level helpers: init, push-at-bottom, free
+- Used by the parser (to build stack `a`) and by `stack_free` on cleanup paths
 
 NOT covered here:
-- The 11 push_swap operations (`sa`, `pa`, `ra`, ... — separate concern, lives in Phase 2)
+- The 11 push_swap operations (`sa`, `pa`, `ra`, ... — separate concern, lives in Phase 2). **Important**: operations re-link existing nodes directly with pointer manipulation and do NOT call these helpers (no malloc/free during ops).
 - Value-to-index mapping (`coordinate-compression.md`)
 - Whether `t_stack` holds A and B together or as separate instances (deferred follow-up; the interface below assumes **separate instances**)
 
@@ -40,9 +44,8 @@ typedef struct s_stack
 t_stack *stack_init(void);
 void     stack_free(t_stack *s);
 
-/* Mutation */
-int      stack_push_top(t_stack *s, int value, int index);
-t_node  *stack_pop_top(t_stack *s);
+/* Mutation (parser is the only production caller) */
+int      stack_push_bottom(t_stack *s, int value, int index);
 ```
 
 ### Implementation outline
@@ -56,43 +59,39 @@ t_node  *stack_pop_top(t_stack *s);
 3. If `size == 1`: `top == tail`.
 4. If `size >= 2`: `top->prev == NULL`, `tail->next == NULL`, forward traversal `top → ... → tail` matches reverse traversal via `prev`.
 
-**`stack_push_top` (used by `pa`/`pb`)**:
+**`stack_push_bottom` (used by the parser)**:
 
-1. Allocate a new node, store `value` and `index`.
-2. Link: `new->next = old_top`, `new->prev = NULL`.
-3. If `old_top != NULL`: `old_top->prev = new`.
-4. If `size == 0`: `tail = new` (single-element case).
-5. Update `top = new`, increment `size`.
+1. Allocate a new node, store `value` and `index`. On malloc failure, return non-zero.
+2. Set `new->next = NULL` (new node will be the tail).
+3. If `size == 0` (empty stack):
+   - Set `new->prev = NULL`.
+   - Set both `top` and `tail` to the new node.
+4. Else (non-empty stack):
+   - Set `new->prev = current tail`.
+   - Set `current tail->next = new`.
+   - Update `tail = new`.
+5. Increment `size`. Return 0 on success.
 
-**`stack_pop_top` (used by `pa`/`pb`)**:
-
-1. If `size == 0`: return `NULL` (caller's responsibility to check).
-2. Save `node = top`.
-3. Update `top = top->next`.
-4. If new `top != NULL`: `top->prev = NULL`. Else: `tail = NULL`.
-5. Decrement `size`. Return `node` (caller may free or re-push elsewhere).
-
-> Rotation operations (`ra`, `rra`, etc.) operate by re-linking pointers between `top` and `tail`, all O(1). Their detailed steps belong to the operations plan, not this one.
+> Rotation and push/pop operations (`ra`, `rra`, `pa`, etc.) operate by re-linking pointers between `top` and `tail`, all O(1). Their detailed steps belong to the operations plan, not this one.
 
 ### Edge cases
 
 - Empty stack push: both `top` and `tail` point to the new node.
-- Single-element pop: stack becomes empty (`top = tail = NULL`).
-- `malloc` returns `NULL`: caller must check return value and bail out via the parser's `Error` path.
+- `malloc` returns `NULL`: function returns non-zero; caller must check and bail out via the parser's `Error` path.
+- `stack_free(NULL)`: must be safe (early return).
 
 ### Complexity argument
 
-- All helpers are **O(1)** — pointer manipulation only, no traversal.
+- `stack_init`, `stack_push_bottom`: **O(1)** — pointer manipulation only, no traversal. The `tail` pointer is what keeps push-at-bottom from degrading to O(n).
+- `stack_free`: O(n) — must traverse and free every node.
 - Memory: O(n) total nodes, constant size per node.
-- This O(1) per primitive is what enables every push_swap operation to remain O(1) in C-side time.
 
 ### Testing
 
 - After `stack_init`: `top == NULL`, `tail == NULL`, `size == 0`.
-- After single `push_top`: `top == tail == new_node`, `size == 1`.
-- After n pushes: `size == n`, `top` is the latest, `tail` is the first pushed.
-- After n pushes then n pops: stack returns to empty state with all invariants.
-- Stress test: random sequence of pushes/pops with invariant assertions after each op.
+- After single `stack_push_bottom`: `top == tail == new_node`, `size == 1`.
+- After n pushes with values `v1, v2, ..., vn`: `size == n`, `top->value == v1`, `tail->value == vn`, forward traversal yields `v1 → v2 → ... → vn`.
+- After `stack_free`: valgrind reports no leaks.
 
 ---
 
@@ -101,11 +100,11 @@ t_node  *stack_pop_top(t_stack *s);
 ### Scope
 
 - `t_node` と `t_stack` 型の定義
-- スタックレベルのヘルパー:初期化、top への push、top からの pop、解放、簡単な inspector
-- 全 push_swap 命令と全アルゴリズム tier から呼ばれる
+- スタックレベルのヘルパー:初期化、push-at-bottom、解放
+- parser(`a` 構築用)と cleanup 経路の `stack_free` から呼ばれる
 
 ここでカバーしないもの:
-- 11 個の push_swap 命令(`sa`, `pa`, `ra`, ... — 別の関心事、Phase 2)
+- 11 個の push_swap 命令(`sa`, `pa`, `ra`, ... — 別の関心事、Phase 2)。**重要**:命令は **既存ノードのポインタを直接付け替える** だけで、これらの helper を呼ばない(命令中に malloc/free は走らない)。
 - 値から index へのマッピング(`coordinate-compression.md`)
 - `t_stack` で A/B を統合するか別 instance にするか(follow-up 保留。以下のインターフェースは**別 instance**を前提)
 
@@ -131,9 +130,8 @@ typedef struct s_stack
 t_stack *stack_init(void);
 void     stack_free(t_stack *s);
 
-/* 変更 */
-int      stack_push_top(t_stack *s, int value, int index);
-t_node  *stack_pop_top(t_stack *s);
+/* 変更(production の呼び出し元は parser のみ)*/
+int      stack_push_bottom(t_stack *s, int value, int index);
 ```
 
 ### Implementation outline
@@ -147,40 +145,36 @@ t_node  *stack_pop_top(t_stack *s);
 3. `size == 1` のとき:`top == tail`。
 4. `size >= 2` のとき:`top->prev == NULL`、`tail->next == NULL`、前進(`top → ... → tail`)と `prev` 経由の逆走査が一致。
 
-**`stack_push_top`(`pa`/`pb` から呼ばれる)**:
+**`stack_push_bottom`(parser から呼ばれる)**:
 
-1. 新ノードを確保、`value` と `index` を設定。
-2. リンク:`new->next = old_top`、`new->prev = NULL`。
-3. `old_top != NULL` なら:`old_top->prev = new`。
-4. `size == 0` なら:`tail = new`(単一要素ケース)。
-5. `top = new`、`size++`。
+1. 新ノードを確保、`value` と `index` を設定。malloc 失敗時は非ゼロを return。
+2. `new->next = NULL` を設定(新ノードが tail になるため)。
+3. `size == 0`(空スタック)なら:
+   - `new->prev = NULL` を設定。
+   - `top` と `tail` の両方を新ノードに。
+4. それ以外(非空)なら:
+   - `new->prev = 現在の tail` を設定。
+   - `現在の tail->next = new` を設定。
+   - `tail = new` に更新。
+5. `size++`。成功時 0 を return。
 
-**`stack_pop_top`(`pa`/`pb` から呼ばれる)**:
-
-1. `size == 0` なら `NULL` を返す(呼び出し側で check)。
-2. `node = top` を保存。
-3. `top = top->next` に更新。
-4. 新しい `top != NULL` なら `top->prev = NULL`。そうでなければ `tail = NULL`。
-5. `size--`、`node` を返す(呼び出し側が free するか別の場所に push する)。
-
-> 回転命令(`ra`, `rra` など)は `top` と `tail` 間のポインタを付け替えるだけで全 O(1)。詳細は本プランではなく operations プランで扱う。
+> 回転命令や push/pop 命令(`ra`, `rra`, `pa` 等)は `top` と `tail` 間のポインタを付け替えるだけで全 O(1)。詳細は本プランではなく operations プランで扱う。
 
 ### Edge cases
 
 - 空スタックへの push:`top` と `tail` の両方が新ノードを指す。
-- 単一要素の pop:スタックが空に戻る(`top = tail = NULL`)。
-- `malloc` が `NULL` を返した:呼び出し側で check し、parser の `Error` 経路に戻す。
+- `malloc` が `NULL` を返した:関数は非ゼロを return、呼び出し側で check し parser の `Error` 経路に戻す。
+- `stack_free(NULL)`:安全に扱う(早期 return)必要。
 
 ### Complexity argument
 
-- 全ヘルパーは **O(1)** —— ポインタ操作のみ、走査なし。
+- `stack_init`、`stack_push_bottom`:**O(1)** —— ポインタ操作のみ、走査なし。`tail` ポインタの存在が push-at-bottom を O(n) に劣化させない鍵。
+- `stack_free`:O(n) —— 全ノードを辿って free する必要。
 - メモリ:総ノード数 O(n)、ノードあたり定数サイズ。
-- この C 側 O(1) primitive が、全 push_swap 命令を C 側で O(1) に保つ前提。
 
 ### Testing
 
 - `stack_init` 後:`top == NULL`、`tail == NULL`、`size == 0`。
-- 単一 `push_top` 後:`top == tail == new_node`、`size == 1`。
-- n 回 push 後:`size == n`、`top` が最新、`tail` が最初に push されたもの。
-- n 回 push して n 回 pop:全 invariants を保ったまま空に戻る。
-- ストレステスト:ランダムな push/pop 列、各操作後に invariant をアサート。
+- 単一 `stack_push_bottom` 後:`top == tail == new_node`、`size == 1`。
+- 値 `v1, v2, ..., vn` を順に push 後:`size == n`、`top->value == v1`、`tail->value == vn`、前進走査が `v1 → v2 → ... → vn` を produces する。
+- `stack_free` 後:valgrind がリーク 0 を報告。

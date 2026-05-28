@@ -1,44 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   stack_push_bottom.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/28 20:10:49 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/28 17:00:19 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/28 20:30:35 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	main(int argc, char const *argv[])
+int	stack_push_bottom(t_stack *s, int value, int index)
 {
-	t_stack	*new_stack;
-	t_node	*current_node;
-	int		i;
-	int		j;
+	t_node	*new_node;
 
-	if (argc <= 1)
-	{
-		printf("Usage: %s <nbr> ...\n", argv[0]);
+	new_node = malloc(sizeof(t_node));
+	if (!new_node)
 		return (1);
-	}
-	i = 1;
-	new_stack = stack_init();
-	while (i < argc)
+	new_node->value = value;
+	new_node->index = index;
+	new_node->next = NULL;
+	if (s->size == 0)
 	{
-		stack_push_bottom(new_stack, atoi(argv[i]), 0);
-		i++;
+		new_node->prev = NULL;
+		s->top = new_node;
+		s->tail = new_node;
 	}
-	j = 0;
-	current_node = new_stack->top;
-	while (current_node)
+	else
 	{
-		printf("[%d]%d\n", j, current_node->value);
-		current_node = current_node->next;
-		j++;
+		new_node->prev = s->tail;
+		s->tail->next = new_node;
+		s->tail = new_node;
 	}
-	stack_free(new_stack);
+	s->size++;
 	return (0);
 }
