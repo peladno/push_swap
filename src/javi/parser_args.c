@@ -6,11 +6,11 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 22:14:46 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/27 22:00:07 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/28 20:15:05 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../../include/push_swap.h"
 
 // example ./push_swap --simple 1 209 -2 45 32 8
 
