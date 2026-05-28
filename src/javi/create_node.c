@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   create_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 20:21:14 by jperez-u          #+#    #+#             */
+/*   Created: 2026/05/28 21:54:13 by jperez-u          #+#    #+#             */
 /*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-long	ft_atol(const char *str)
+t_node	*create_node(int value)
 {
-	long	result;
-	int		sign;
+	t_node *new_node = malloc(sizeof(t_node));
 
-	result = 0;
-	sign = 1;
-	while (*str == ' ' || (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == '-' || *str == '+')
-	{
-		if (*str == '-')
-			sign = -1;
-		str++;
-	}
-	while (*str >= '0' && *str <= '9')
-	{
-		result = result * 10 + (*str - '0');
-		str++;
-	}
-	return (result * sign);
+	if (!new_node)
+		return (NULL);
+
+	new_node->value = value;
+	new_node->next = NULL;
+	new_node->prev = NULL;
+	new_node->index = -1;
+
+	return (new_node);
 }

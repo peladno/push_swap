@@ -6,11 +6,11 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 21:46:01 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 20:22:37 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/push_swap.h"
+#include "push_swap.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {

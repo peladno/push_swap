@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   stack_add_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 20:21:14 by jperez-u          #+#    #+#             */
+/*   Created: 2026/05/28 22:06:12 by jperez-u          #+#    #+#             */
 /*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-long	ft_atol(const char *str)
+int	stack_add_back(t_stack *stack, int value)
 {
-	long	result;
-	int		sign;
+	t_node *new_node;
 
-	result = 0;
-	sign = 1;
-	while (*str == ' ' || (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == '-' || *str == '+')
+	new_node = create_node(value);
+	if (!new_node)
+		return (0);
+	if (stack->size == 0)
 	{
-		if (*str == '-')
-			sign = -1;
-		str++;
+		stack->top = new_node;
+		stack->bottom = new_node;
 	}
-	while (*str >= '0' && *str <= '9')
+	else
 	{
-		result = result * 10 + (*str - '0');
-		str++;
+		stack->bottom->next = new_node;
+		new_node->prev = stack->bottom;
+		stack->bottom = new_node;
 	}
-	return (result * sign);
+	stack->size++;
+	return (1);
 }

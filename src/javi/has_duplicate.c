@@ -1,36 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atol.c                                          :+:      :+:    :+:   */
+/*   has_duplicate.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 20:21:14 by jperez-u          #+#    #+#             */
+/*   Created: 2026/05/28 21:24:57 by jperez-u          #+#    #+#             */
 /*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-long	ft_atol(const char *str)
+int	has_duplicate(t_stack *a, int value)
 {
-	long	result;
-	int		sign;
+	t_node *current;
 
-	result = 0;
-	sign = 1;
-	while (*str == ' ' || (*str >= 9 && *str <= 13))
-		str++;
-	if (*str == '-' || *str == '+')
+	current = a->top;
+	while (current)
 	{
-		if (*str == '-')
-			sign = -1;
-		str++;
+		if (current->value == value)
+			return (1);
+		current = current->next;
 	}
-	while (*str >= '0' && *str <= '9')
-	{
-		result = result * 10 + (*str - '0');
-		str++;
-	}
-	return (result * sign);
+	return (0);
 }

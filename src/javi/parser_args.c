@@ -6,13 +6,23 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 22:14:46 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 21:01:07 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/28 22:33:42 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/push_swap.h"
+#include "push_swap.h"
 
 // example ./push_swap --simple 1 209 -2 45 32 8
+
+/*
+ * TODO remaining in parse_args:
+ * - Free stack A before returning error if nodes were already allocated.
+ * - Decide behavior for flag-only input:
+ *   ./push_swap --simple
+ * - Call coordinate compression after stack A is fully built.
+ * - Later: support quoted string input:
+ *   ./push_swap "1 2 3"
+ */
 
 int	parse_strategy(char *arg, t_strategy *strategy)
 {
@@ -55,9 +65,9 @@ int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
 			num = ft_atol(argv[i]);
 			if (num < INT_MIN || num > INT_MAX)
 				return (1);
-			if (has_duplicate(a, (int)num)) // TODO
+			if (has_duplicate(a, (int)num))
 				return (1);
-			if (!stack_add_back(a, (int)num)) // TODO
+			if (!stack_add_back(a, (int)num))
 				return (1);
 		}
 		i++;

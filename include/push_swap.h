@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 21:00:53 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/28 22:25:06 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PUSH_SWAP_H
 
 # include <limits.h>
+# include <stdlib.h>
 # include <unistd.h>
 
 typedef struct s_node
@@ -45,6 +46,10 @@ int					parse_args(int argc, char **argv, t_stack *a,
 void				error_msg(void);
 int					ft_strcmp(const char *s1, const char *s2);
 long				ft_atol(const char *nptr);
-int					is_numbr(char *str);
+int					is_number(char *str);
+t_node				*create_node(int data);
+void				stack_init(t_stack *stack);
+int					stack_add_back(t_stack *stack, int value);
+int					has_duplicate(t_stack *a, int value);
 
 #endif
