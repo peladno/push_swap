@@ -1,38 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/08 14:08:29 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/08 14:56:23 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+static void	putdigits(long l, int fd)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	if (l > 9)
+		putdigits(l / 10, fd);
+	ft_putchar_fd('0' + (l % 10), fd);
+}
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+void	ft_putnbr_fd(int n, int fd)
+{
+	long	l;
+
+	l = (long)n;
+	if (l < 0)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		ft_putchar_fd('-', fd);
+		l = -l;
 	}
-	return (0);
+	putdigits(l, fd);
 }

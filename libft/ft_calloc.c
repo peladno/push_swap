@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/14 21:25:01 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/15 17:58:53 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	void	*tmp;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
-	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
-	}
-	return (0);
+	if (size != 0 && nmemb > SIZE_MAX / size)
+		return (NULL);
+	if (nmemb == 0 || size == 0)
+		return (malloc(1));
+	tmp = malloc(nmemb * size);
+	if (!tmp)
+		return (NULL);
+	ft_bzero(tmp, nmemb * size);
+	return (tmp);
 }

@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/04/29 20:50:12 by skusakab          #+#    #+#             */
+/*   Updated: 2026/04/29 21:32:58 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	size_t			i;
+	unsigned char	*s_tmp;
+	unsigned char	c_tmp;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	s_tmp = (unsigned char *)s;
+	c_tmp = (unsigned char)c;
+	i = 0;
+	while (i < n)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		if (s_tmp[i] == c_tmp)
+			return (&s_tmp[i]);
+		i++;
 	}
-	return (0);
+	return (NULL);
 }

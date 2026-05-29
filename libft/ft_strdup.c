@@ -1,38 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/14 20:58:55 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/14 22:12:12 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+char	*ft_strdup(const char *s)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	char	*result;
+	size_t	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	i = 0;
+	result = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (!result)
+		return (NULL);
+	while (s[i])
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		result[i] = s[i];
+		i++;
 	}
-	return (0);
+	result[i] = '\0';
+	return (result);
 }

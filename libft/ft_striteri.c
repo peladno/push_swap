@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/07 21:44:22 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/07 22:01:42 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+void	ft_striteri(char *s, void (*f)(unsigned int, char *))
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	unsigned int	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	if (!s || !f)
+		return ;
+	i = 0;
+	while (*s)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		f(i, s);
+		i++;
+		s++;
 	}
-	return (0);
 }

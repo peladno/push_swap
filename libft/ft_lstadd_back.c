@@ -1,38 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/09 18:16:29 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/09 18:56:06 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
-
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	if (!lst || !new)
+		return ;
+	if (!*lst)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		*lst = new;
+		return ;
 	}
-	return (0);
+	ft_lstlast(*lst)->next = new;
 }

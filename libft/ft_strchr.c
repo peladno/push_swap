@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/04/27 19:49:26 by skusakab          #+#    #+#             */
+/*   Updated: 2026/04/29 22:42:21 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+char	*ft_strchr(const char *s, int c)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	int	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	i = 0;
+	while (1)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return ((char *)&s[i]);
+		if (s[i] == '\0')
+			return (NULL);
+		i++;
 	}
-	return (0);
 }

@@ -1,38 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/04/28 17:09:50 by skusakab          #+#    #+#             */
+/*   Updated: 2026/04/28 17:39:50 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+int	ft_atoi(const char *nptr)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	int	i;
+	int	sign;
+	int	result;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	i = 0;
+	sign = 1;
+	result = 0;
+	while (nptr[i] == ' ' || ('\t' <= nptr[i] && nptr[i] <= '\r'))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		if (nptr[i] == '-')
+			sign = -1;
+		i++;
 	}
-	return (0);
+	while ('0' <= nptr[i] && nptr[i] <= '9' && nptr[i])
+	{
+		result = result * 10 + (nptr[i] - '0');
+		i++;
+	}
+	return (sign * result);
 }

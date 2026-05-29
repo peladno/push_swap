@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/04/23 17:03:04 by skusakab          #+#    #+#             */
+/*   Updated: 2026/04/23 17:47:28 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	size_t	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	i = 0;
+	if (size > 0)
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
+		while (i < (size - 1) && src[i])
 		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
+			dst[i] = src[i];
+			i++;
 		}
-		target->index = counts;
-		target = target->next;
+		dst[i] = '\0';
 	}
-	return (0);
+	return (ft_strlen(src));
 }

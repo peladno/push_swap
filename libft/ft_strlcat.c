@@ -1,38 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:19:40 by skusakab         ###   ########.fr       */
+/*   Created: 2026/04/23 17:52:11 by skusakab          #+#    #+#             */
+/*   Updated: 2026/04/24 19:30:07 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "libft.h"
 
-int	coord_compress(t_stack *stack_a)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	size_t	d_len;
+	size_t	s_len;
+	size_t	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	d_len = 0;
+	s_len = ft_strlen(src);
+	i = 0;
+	while (d_len < size && dst[d_len])
+		d_len++;
+	if (d_len == size)
+		return (size + s_len);
+	while (src[i] && (d_len + i + 1 < size))
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		dst[d_len + i] = src[i];
+		i++;
 	}
-	return (0);
+	dst[d_len + i] = '\0';
+	return (d_len + s_len);
 }

@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 16:31:33 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/05/29 20:14:22 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char const *argv[])
 	stack_a = stack_init();
 	while (i < argc)
 	{
-		stack_push_bottom(stack_a, atoi(argv[i]), 0);
+		stack_push_bottom(stack_a, ft_atoi(argv[i]), 0);
 		i++;
 	}
 	coord_compress(stack_a);

@@ -6,15 +6,16 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 15:58:49 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/05/29 19:28:52 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include <stdlib.h>
+# include "libft.h"
 # include <stdio.h>
+# include <stdlib.h>
 
 typedef struct s_node
 {
