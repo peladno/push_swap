@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 22:25:06 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/29 22:56:08 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,11 @@ t_node				*create_node(int data);
 void				stack_init(t_stack *stack);
 int					stack_add_back(t_stack *stack, int value);
 int					has_duplicate(t_stack *a, int value);
+void				free_stack(t_stack *stack);
+
+int					coord_compress(t_stack *stack);
+int					*stack_to_array(t_stack *stack);
+void				sort_int_array(int *arr, int size);
+int					find_index(int *arr, int size, int value);
 
 #endif
