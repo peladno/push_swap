@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack_push_bottom.c                                :+:      :+:    :+:   */
+/*   coordinate_compression.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 17:00:19 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 15:59:44 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/29 16:48:49 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	stack_push_bottom(t_stack *stack_a, int value, int index)
+int	coord_compress(t_stack *stack_a)
 {
-	t_node	*new_node;
+	t_node	*target;
+	t_node	*comp;
+	size_t	counts;
 
-	new_node = malloc(sizeof(t_node));
-	if (!new_node)
+	if (!stack_a || stack_a->size <= 1)
 		return (1);
-	new_node->value = value;
-	new_node->index = index;
-	new_node->next = NULL;
-	if (stack_a->size == 0)
+	target = stack_a->top;
+	while (target)
 	{
-		new_node->prev = NULL;
-		stack_a->top = new_node;
-		stack_a->tail = new_node;
+		comp = stack_a->top;
+		counts = 0;
+		while (comp)
+		{
+			if (target->value > comp->value)
+				counts++;
+			comp = comp->next;
+		}
+		target->index = counts;
+		target = target->next;
 	}
-	else
-	{
-		new_node->prev = stack_a->tail;
-		stack_a->tail->next = new_node;
-		stack_a->tail = new_node;
-	}
-	stack_a->size++;
 	return (0);
 }
