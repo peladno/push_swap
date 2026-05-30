@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/26 22:14:46 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/29 23:00:47 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 15:06:20 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 
 /*
  * TODO remaining in parse_args:
- * - Free stack A before returning error if nodes were already allocated.
- * - Decide behavior for flag-only input:
  *   ./push_swap --simple
  * - Call coordinate compression after stack A is fully built.
  * - Later: support quoted string input:
@@ -39,11 +37,37 @@ int	parse_strategy(char *arg, t_strategy *strategy)
 	return (1);
 }
 
-int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
+static int	parse_number(char *arg, t_stack *a)
 {
 	long	num;
-	int		i;
-	int		flag_count;
+
+	if (!is_number(arg))
+		return (1);
+	num = ft_atol(arg);
+	if (num < INT_MIN || num > INT_MAX)
+		return (1);
+	if (has_duplicate(a, (int)num))
+		return (1);
+	if (!stack_add_back(a, (int)num))
+		return (1);
+	return (0);
+}
+
+static int	handle_strategy(char *arg, t_strategy *strategy, int *flag_count)
+{
+	if (!parse_strategy(arg, strategy))
+		return (0);
+	(*flag_count)++;
+	if (*flag_count > 1)
+		return (-1);
+	return (1);
+}
+
+int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
+{
+	int	i;
+	int	flag_status;
+	int	flag_count;
 
 	i = 1;
 	flag_count = 0;
@@ -52,35 +76,11 @@ int	parse_args(int argc, char **argv, t_stack *a, t_strategy *strategy)
 		return (0);
 	while (i < argc)
 	{
-		if (parse_strategy(argv[i], strategy))
+		flag_status = handle_strategy(argv[i], strategy, &flag_count);
+		if (flag_status == -1 || (flag_status == 0 && parse_number(argv[i], a)))
 		{
-			flag_count++;
-			if (flag_count > 1)
-				return (1);
-		}
-		else
-		{
-			if (!is_number(argv[i]))
-			{
-				error_msg();
-				return (1);
-			}
-			num = ft_atol(argv[i]);
-			if (num < INT_MIN || num > INT_MAX)
-			{
-				error_msg();
-				return (1);
-			}
-			if (has_duplicate(a, (int)num))
-			{
-				error_msg();
-				return (1);
-			}
-			if (!stack_add_back(a, (int)num))
-			{
-				error_msg();
-				return (1);
-			}
+			free_stack(a);
+			return (1);
 		}
 		i++;
 	}
