@@ -6,13 +6,14 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/29 22:56:08 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 17:48:45 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
+# include <aio.h>
 # include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -57,5 +58,7 @@ int					coord_compress(t_stack *stack);
 int					*stack_to_array(t_stack *stack);
 void				sort_int_array(int *arr, int size);
 int					find_index(int *arr, int size, int value);
+char				**ft_split(char const *s, char c);
+int					parse_string_arg(char *arg, t_stack *a);
 
 #endif

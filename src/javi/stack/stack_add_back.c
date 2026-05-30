@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 22:06:12 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:20:18 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	stack_add_back(t_stack *stack, int value)
 {
-	t_node *new_node;
+	t_node	*new_node;
 
 	new_node = create_node(value);
 	if (!new_node)

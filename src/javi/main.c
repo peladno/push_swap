@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 22:19:54 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 15:10:19 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:16:10 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #include <stdio.h>
 #include <unistd.h>
 
-// gcc -Wall -Wextra -Werror -I ./include ./src/javi/*.c -o push_swap
+// gcc -Wall -Wextra -Werror
+//
+//	-I ./include ./src/javi/compress/*.c ./src/javi/stack/*.c ./src/javi/parser/*.c ./src/javi/utils/*.c
+// -o push_swap
 // ./push_swap
 
 void	print_stack(t_stack *stack)
@@ -34,13 +37,12 @@ void	print_stack(t_stack *stack)
 
 int	main(int argc, char **argv)
 {
-	t_stack a;
-	t_strategy strategy;
+	t_stack		a;
+	t_strategy	strategy;
 
 	stack_init(&a);
-	if (parse_args(argc, argv, &a, &strategy))
+	if (parse_args(argc, argv, &a, &strategy) == 1)
 	{
-		write(2, "Error\n", 6);
 		free_stack(&a);
 		return (1);
 	}

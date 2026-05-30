@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 23:09:02 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/29 23:09:17 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:19:19 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	*stack_to_array(t_stack *stack)
 {
-	t_node *current;
-	int *array;
-	int i;
+	t_node	*current;
+	int		*array;
+	int		i;
 
 	array = malloc(stack->size * sizeof(int));
 	if (!array)

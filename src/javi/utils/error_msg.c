@@ -6,15 +6,13 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 21:32:04 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:16:06 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-// TODO ft_printf???
-
 void	error_msg(void)
 {
-	write(1, "error\n", 6);
+	write(1, "Error\n", 6);
 }

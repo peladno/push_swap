@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 21:24:57 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/28 22:20:36 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:19:48 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	has_duplicate(t_stack *a, int value)
 {
-	t_node *current;
+	t_node	*current;
 
 	current = a->top;
 	while (current)

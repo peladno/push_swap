@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 20:05:36 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 14:30:13 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:19:01 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	coord_compress(t_stack *stack)
 {
-	t_node *current;
-	int *arr;
+	t_node	*current;
+	int		*arr;
 
 	if (!stack || stack->size == 0)
 		return (1);

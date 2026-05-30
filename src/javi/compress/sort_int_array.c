@@ -6,15 +6,15 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 14:14:15 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 14:29:34 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:19:14 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 void	sort_int_array(int *arr, int size)
 {
-	int i;
-	int j;
-	int tmp;
+	int	i;
+	int	j;
+	int	tmp;
 
 	i = 0;
 	while (i < size - 1)
