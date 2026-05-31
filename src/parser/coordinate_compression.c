@@ -6,20 +6,18 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/30 16:43:24 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/05/31 17:07:53 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	coord_compress(t_stack *stack_a)
+void	coord_compress(t_stack *stack_a)
 {
 	t_node	*target;
 	t_node	*comp;
 	int		counts;
 
-	if (!stack_a)
-		return (1);
 	target = stack_a->top;
 	while (target)
 	{
@@ -34,5 +32,4 @@ int	coord_compress(t_stack *stack_a)
 		target->index = counts;
 		target = target->next;
 	}
-	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/05/31 15:46:59 by skusakab         ###   ########.fr        #
+#    Updated: 2026/05/31 17:18:15 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ SRCS		=	src/main.c \
 				src/parser/validate_token.c \
 				src/parser/free_split.c \
 				src/parser/has_duplicates.c \
-				src/parser/safe_atoi.c \
 				src/parser/parse_args.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc

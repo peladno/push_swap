@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/30 18:05:39 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/05/31 17:19:21 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,20 @@ typedef enum e_strategy
 	STRATEGY_COMPLEX
 }					t_strategy;
 
+typedef enum e_status
+{
+	STATUS_OK,
+	STATUS_ERROR
+}					t_status;
+
 t_stack				*stack_init(void);
 void				stack_free(t_stack *stack_a);
-int					stack_push_bottom(t_stack *stack_a, int value, int index);
-int					coord_compress(t_stack *stack_a);
-int					safe_atoi(const char *str, int *out_value);
-int					validate_token(const char *tok, int *out_value);
+t_status			stack_push_bottom(t_stack *stack_a, int value, int index);
+void				coord_compress(t_stack *stack_a);
+t_status			validate_token(const char *tok, int *out_value);
 void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
-int					parse_args(int argc, char **argv, t_stack *stack_a,
+t_status			parse_args(int argc, char **argv, t_stack *stack_a,
 						t_strategy *out_strategy);
 
 #endif
