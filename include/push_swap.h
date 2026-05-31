@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 19:28:52 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/05/30 18:05:39 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PUSH_SWAP_H
 
 # include "libft.h"
+# include <limits.h>
 # include <stdio.h>
 # include <stdlib.h>
 
@@ -44,5 +45,11 @@ t_stack				*stack_init(void);
 void				stack_free(t_stack *stack_a);
 int					stack_push_bottom(t_stack *stack_a, int value, int index);
 int					coord_compress(t_stack *stack_a);
+int					safe_atoi(const char *str, int *out_value);
+int					validate_token(const char *tok, int *out_value);
+void				free_split(char **tokens);
+int					has_duplicates(t_stack *stack_a);
+int					parse_args(int argc, char **argv, t_stack *stack_a,
+						t_strategy *out_strategy);
 
 #endif

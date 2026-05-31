@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   validate_token.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/30 16:43:24 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/30 15:05:30 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/31 15:12:19 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	coord_compress(t_stack *stack_a)
+int	validate_token(const char *token, int *out_value)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	int	i;
 
-	if (!stack_a)
+	i = 0;
+	if (!token)
 		return (1);
-	target = stack_a->top;
-	while (target)
-	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
-	}
-	return (0);
+	if (token[i] == '-')
+		i++;
+	if (ft_isdigit(token[i]) == 0)
+		return (1);
+	return (safe_atoi(token, out_value));
 }

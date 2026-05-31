@@ -1,38 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   safe_atoi.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/30 16:43:24 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/30 17:01:10 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/30 17:01:25 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	coord_compress(t_stack *stack_a)
+int	safe_atoi(const char *str, int *out_value)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	long long	nbr;
+	int			i;
+	int			sign;
+	int			limit_digit;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	nbr = 0;
+	i = 0;
+	sign = 1;
+	limit_digit = 11;
+	if (str[i] == '-')
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		sign *= -1;
+		i++;
+		limit_digit++;
 	}
+	while (ft_isdigit(str[i]) == 1 && i < limit_digit)
+	{
+		nbr = (nbr * 10) + (sign * (str[i] - '0'));
+		i++;
+	}
+	if ((str[i] || (nbr < INT_MIN || INT_MAX < nbr)))
+		return (1);
+	*out_value = nbr;
 	return (0);
 }

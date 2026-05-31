@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coordinate_compression.c                           :+:      :+:    :+:   */
+/*   free_split.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/29 15:56:46 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/30 16:43:24 by skusakab         ###   ########.fr       */
+/*   Created: 2026/05/30 16:19:25 by skusakab          #+#    #+#             */
+/*   Updated: 2026/05/30 16:45:12 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	coord_compress(t_stack *stack_a)
+void	free_split(char **tokens)
 {
-	t_node	*target;
-	t_node	*comp;
-	int		counts;
+	int	i;
 
-	if (!stack_a)
-		return (1);
-	target = stack_a->top;
-	while (target)
+	if (!tokens)
+		return ;
+	i = 0;
+	while (tokens[i])
 	{
-		comp = stack_a->top;
-		counts = 0;
-		while (comp)
-		{
-			if (target->value > comp->value)
-				counts++;
-			comp = comp->next;
-		}
-		target->index = counts;
-		target = target->next;
+		free(tokens[i]);
+		i++;
 	}
-	return (0);
+	free(tokens);
 }
