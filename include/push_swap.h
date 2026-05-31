@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 17:48:45 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/31 15:44:11 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void				error_msg(void);
 int					ft_strcmp(const char *s1, const char *s2);
 long				ft_atol(const char *nptr);
 int					is_number(char *str);
+void				ft_putstr(char *str);
+
 t_node				*create_node(int data);
 void				stack_init(t_stack *stack);
 int					stack_add_back(t_stack *stack, int value);
@@ -60,5 +62,9 @@ void				sort_int_array(int *arr, int size);
 int					find_index(int *arr, int size, int value);
 char				**ft_split(char const *s, char c);
 int					parse_string_arg(char *arg, t_stack *a);
+
+void				sa(t_stack *a);
+void				sb(t_stack *b);
+void				ss(t_stack *a, t_stack *b);
 
 #endif
