@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 15:39:59 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/31 15:58:49 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/05/31 16:02:02 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	sb(t_stack *b)
 
 void	ss(t_stack *a, t_stack *b)
 {
-	if (!a || !b) // CHECK is necessary?
+	if (!a || !b) // CHECK,  is necessary?
 		return ;
 	if (a->size > 1 && b->size > 1)
 	{
