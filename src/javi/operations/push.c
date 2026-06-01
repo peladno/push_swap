@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 16:02:28 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/31 17:52:05 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 21:19:40 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,26 @@
 
 #include "push_swap.h"
 
-static int	push(t_stack *a, t_stack *b)
+static int	push(t_stack *dst, t_stack *src)
 {
-	t_node	*firstb;
-	t_node	*secondb;
+	t_node	*node;
 
-	if (!a || b->size == 0)
-		return ;
+	if (!dst || !src || src->size == 0)
+		return (OP_NOT_DONE);
+	node = src->top;
+	src->top = node->next;
+	if (src->top)
+		src->top->prev = NULL;
+	else
+		src->bottom = NULL;
+	node->next = dst->top;
+	node->prev = NULL;
+	if (dst->top)
+		dst->top->prev = node;
+	else
+		dst->bottom = node;
+	dst->top = node;
+	dst->size++;
+	src->size--;
+	return (OP_DONE);
 }

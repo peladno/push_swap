@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 15:39:59 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/31 16:02:02 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 21:17:56 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	swap_top(t_stack *stack)
 	t_node	*third;
 
 	if (!stack || stack->size < 2)
-		return (0);
+		return (OP_NOT_DONE);
 	first = stack->top;
 	second = first->next;
 	third = second->next;
@@ -32,7 +32,7 @@ static int	swap_top(t_stack *stack)
 	else
 		stack->bottom = first;
 	stack->top = second;
-	return (0);
+	return (OP_DONE);
 }
 
 void	sa(t_stack *a)
@@ -49,7 +49,7 @@ void	sb(t_stack *b)
 
 void	ss(t_stack *a, t_stack *b)
 {
-	if (!a || !b) // CHECK,  is necessary?
+	if (!a || !b)
 		return ;
 	if (a->size > 1 && b->size > 1)
 	{

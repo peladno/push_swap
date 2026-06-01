@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/31 15:44:11 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 21:17:33 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ typedef enum e_strategy
 	STRATEGY_MEDIUM,
 	STRATEGY_COMPLEX
 }					t_strategy;
+
+typedef enum e_status
+{
+	STATUS_OK,
+	STATUS_ERROR
+}					t_status;
+
+typedef enum e_operation
+{
+	OP_NOT_DONE,
+	OP_DONE
+}					t_operation;
 
 int					parse_args(int argc, char **argv, t_stack *a,
 						t_strategy *strategy);
