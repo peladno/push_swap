@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 17:37:17 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/01 20:20:25 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 20:22:18 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ static int	parse_number_arg(char *arg, t_stack *a)
 {
 	long	num;
 
-	num = ft_atol(arg);
-	if (!is_number(arg))
+	if (!is_number(arg) || safe_atol(arg, &num))
 	{
 		error_msg();
 		return (1);

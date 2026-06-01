@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 17:48:45 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 20:24:52 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int					parse_args(int argc, char **argv, t_stack *a,
 
 void				error_msg(void);
 int					ft_strcmp(const char *s1, const char *s2);
-long				ft_atol(const char *nptr);
+int					safe_atol(const char *str, long *num);
 int					is_number(char *str);
 t_node				*create_node(int data);
 void				stack_init(t_stack *stack);
