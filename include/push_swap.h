@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/01 21:17:33 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 21:52:27 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,8 @@ int					parse_string_arg(char *arg, t_stack *a);
 void				sa(t_stack *a);
 void				sb(t_stack *b);
 void				ss(t_stack *a, t_stack *b);
+
+void				pa(t_stack *a, t_stack *b);
+void				pb(t_stack *a, t_stack *b);
 
 #endif
