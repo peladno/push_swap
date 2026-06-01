@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 17:37:17 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 18:22:46 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 20:20:25 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,6 @@ static int	parse_number_arg(char *arg, t_stack *a)
 
 	num = ft_atol(arg);
 	if (!is_number(arg))
-	{
-		error_msg();
-		return (1);
-	}
-	if (num < INT_MIN || num > INT_MAX)
 	{
 		error_msg();
 		return (1);

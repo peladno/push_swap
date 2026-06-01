@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 22:19:54 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/05/30 18:16:10 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/01 20:12:06 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 // gcc -Wall -Wextra -Werror
 //
-//	-I ./include ./src/javi/compress/*.c ./src/javi/stack/*.c ./src/javi/parser/*.c ./src/javi/utils/*.c
+// 	-I ./include ./src/javi/compress/*.c ./src/javi/stack/*.c ./src/javi/parser/*.c ./src/javi/utils/*.c
 // -o push_swap
 // ./push_swap
 
