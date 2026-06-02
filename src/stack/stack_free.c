@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 20:18:29 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/29 15:59:22 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 19:49:27 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ void	stack_free(t_stack *stack_a)
 		free(current_node);
 		current_node = next_node;
 	}
-	free(stack_a);
+	stack_a->top = NULL;
+	stack_a->bottom = NULL;
+	stack_a->size = 0;
 }
