@@ -1,5 +1,9 @@
 # 2026-05-31 — Phase 2 着手前のコード統合議論 / Pre-Phase 2 code integration discussion
 
+> **2026-06-02 update**: The synchronous pair meeting was deferred. Javier read this doc, accepted So's recommendations, and committed to fixing his side's `safe_atol` independently. So will execute the parser merge unilaterally based on the decisions recorded in the **Solo decisions log** at the bottom of this file. The original "議題と現状比較" sections are preserved as historical context for the integration work.
+>
+> **2026-06-02 更新**:同期ミーティングは延期。Javier は本 doc を読了し、So の推奨方針を受諾、自身の `safe_atol` は独立に修正することを宣言。So は本ファイル末尾の **Solo decisions log** に基づき parser merge を単独で実施。「議題と現状比較」以下のセクションは統合作業時の参照用に保存。
+
 ## English
 
 ### Participants
@@ -401,23 +405,102 @@ The 11 operations to be split between So and Javier (confirm at meeting; kickoff
 
 ---
 
-## Action items (fill after meeting) / Action items(ミーティング後に埋める)
+## Solo decisions log (2026-06-02) / 単独決定記録(2026-06-02)
 
-- [ ] (owner / 担当) Unify library strategy / ライブラリ路線を統一 — due YYYY-MM-DD
-- [ ] (owner / 担当) Unify error stream and emission policy / Error 出力先と集約を統一 — due YYYY-MM-DD
-- [ ] (owner / 担当) Merge `t_status` enum into shared header / `t_status` enum を共通ヘッダに統合 — due YYYY-MM-DD
-- [ ] (owner / 担当) Align t_stack allocation and field names / t_stack 配置とフィールド名を統一 — due YYYY-MM-DD
-- [ ] (owner / 担当) Share `safe_atoi` / `safe_atoi` を共通化 — due YYYY-MM-DD
-- [ ] (owner / 担当) Unify flag duplication handling / flag 重複検出を統一 — due YYYY-MM-DD
-- [ ] (both / 両者) Append decisions to `kickoff.md` / `kickoff.md` に決定事項を追記 — due YYYY-MM-DD
-- [ ] (both / 両者) Finalize Phase 2 op split / Phase 2 命令の分担確定 — due YYYY-MM-DD
+### English
+
+The synchronous meeting was deferred to after Phase 2. Javier reviewed this doc and accepted So's recommendations. So records the final decisions below for the parser merge work, which So owns unilaterally.
+
+#### Decisions
+
+| # | Topic | Decision | Source draft | Rationale source |
+|---|---|---|---|---|
+| 1 🔴 | Library strategy | libft as subproject | So | Doc Recommended |
+| 2 🔴 | Error stream | stderr (fd=2) | So | Doc Recommended |
+| 3 🔴 | Error emission | Centralized in `main` | So | Doc Recommended |
+| 4 🔴 | Error return | `t_status` enum | So | Doc Recommended |
+| 5 🟡 | t_stack allocation | Stack-allocated | Javier | Doc Recommended |
+| 6 🔴 | Field name | `bottom` | Javier | Doc Recommended |
+| 7 🟡 | Node creation | Option B: `create_node` + `stack_add_back` | Javier | So's solo call — single responsibility, easier to defend in review |
+| 8 🟢 | Duplicate check timing | After all pushes, once | So | So's solo call — clean phase separation, already working in Phase 1 |
+| 9 🟢 | coord_compress algorithm | In-place counting | So | So's solo call — no extra malloc, shorter code, less failure surface for merge |
+| 10 🟡 | Flag duplication | Error on ≥ 2 flags | Javier | Doc Recommended |
+| 11 🟢 | Flag-only input | Accept (no-op success) | So | So's solo call — consistent with `./push_swap` alone |
+| 12 🟡 | atoi safety | `safe_atoi` (long long + digit cap) | So | Doc Recommended; Javier acknowledged he'll align his side |
+
+Tally: 7 So / 5 Javier. Balanced.
+
+#### Branch layout note (2026-06-02)
+
+The parser-merge work happens on a new branch off `so/phase1-stack-parser` (which already lacks `src/javi/` — it is a parallel-draft branch independent of Javier's tree). The action items below are scoped to that branch.
+
+**Deferred to the future main-integration step**: removing `src/javi/`, `error_msg.c`, and Javier's `stack_to_array.c` / `sort_int_array.c` / `find_index.c` from `main`. These exist on `main` (merged from `feature/parser/javi`) and on `feature/operations`. Javier is currently working on `feature/operations` for Phase 2 swap ops and has touched `src/javi/` files there. Before deleting `src/javi/` from `main`, we need to confirm with Javier that his ongoing ops work is fully captured on `feature/operations` (or another sub-branch) so the deletion doesn't conflict.
+
+#### Action items — today's parser-merge branch
+
+- [ ] So: checkout `so/phase1-stack-parser`, branch off as `so/parser-merge`.
+- [ ] So: T6 — rename `tail` → `bottom` across header and stack helpers.
+- [ ] So: T5 — change `stack_init` signature to `void stack_init(t_stack *)`, update `main.c` to use `t_stack a;`, reset fields in `stack_free` after node teardown.
+- [ ] So: T7 — split node creation into `create_node(int value)` + `stack_add_back(t_stack *, int)`. Drop the unused `index` parameter.
+- [ ] So: T10 — track `flag_count` in `parse_args`; return `STATUS_ERROR` on `≥ 2`.
+- [ ] So: verify with the existing 17 test cases + new cases (`./push_swap --simple --medium 1 2 3` → Error; `./push_swap --simple` → success) + valgrind across success and error paths.
+
+#### Action items — deferred (future main integration)
+
+- [ ] So: at main integration, remove `src/javi/` (after Javier confirms his ops work is preserved elsewhere).
+- [ ] So: at main integration, drop `error_msg.c`, `stack_to_array.c`, `sort_int_array.c`, `find_index.c` from `main` (subsumed by `so/parser-merge`'s design).
+
+#### Action items — Javier-side (independent)
+
+- [ ] Javier: fix `safe_atol` on his side (he committed to this).
+- [ ] Both: meet after Phase 2 ops drafts are complete to integrate.
 
 ---
 
-## Minutes / 議事(ミーティング後に追記)
+### 日本語
 
-### Decisions / 決定事項
-- (Fill after meeting / ミーティング後に記入)
+同期ミーティングは Phase 2 後に延期。Javier は本 doc をレビューし、So の推奨方針を受諾。以下に So が parser merge 作業のために最終決定を記録(parser merge は So 単独で担当)。
 
-### Open questions / 未解決事項
-- (Fill after meeting / ミーティング後に記入)
+#### 決定事項
+
+| # | Topic | 決定 | 出所ドラフト | 根拠 |
+|---|---|---|---|---|
+| 1 🔴 | ライブラリ路線 | libft をサブプロジェクト | So | Doc 推奨 |
+| 2 🔴 | Error 出力先 | stderr (fd=2) | So | Doc 推奨 |
+| 3 🔴 | Error 出力の集約 | `main` で 1 箇所 | So | Doc 推奨 |
+| 4 🔴 | エラー戻り値 | `t_status` enum | So | Doc 推奨 |
+| 5 🟡 | t_stack 配置 | stack 上 | Javier | Doc 推奨 |
+| 6 🔴 | フィールド名 | `bottom` | Javier | Doc 推奨 |
+| 7 🟡 | ノード生成 | 案 B:`create_node` + `stack_add_back` | Javier | So の単独判断 —— 単一責任、レビューで説明しやすい |
+| 8 🟢 | duplicate 検出タイミング | 全 push 後に 1 回 | So | So の単独判断 —— フェーズ分離が綺麗、Phase 1 で既に動作中 |
+| 9 🟢 | coord_compress | in-place カウント | So | So の単独判断 —— 余分な malloc 不要、コード短い、merge での failure surface 少 |
+| 10 🟡 | flag 重複 | 2 つ以上で Error | Javier | Doc 推奨 |
+| 11 🟢 | flag-only 入力 | 受け入れる(no-op success) | So | So の単独判断 —— `./push_swap` 単体と一貫 |
+| 12 🟡 | atoi 安全性 | `safe_atoi`(long long + 桁制限) | So | Doc 推奨;Javier も自身側で対応宣言 |
+
+集計:So 7 件 / Javier 5 件。バランス良好。
+
+#### ブランチ配置に関する注記(2026-06-02)
+
+parser merge 作業は `so/phase1-stack-parser` から派生した新ブランチで実施。`so/phase1-stack-parser` は **すでに `src/javi/` を含まない**(Javier のツリーから独立した並行ドラフトブランチのため)。下記のアクションはこのブランチに閉じた話。
+
+**将来の main 統合段階に繰越**:`main` および `feature/operations` 上の `src/javi/`、`error_msg.c`、Javier の `stack_to_array.c` / `sort_int_array.c` / `find_index.c` の削除。Javier は `feature/operations` で Phase 2 swap ops を進行中、`src/javi/` 配下のファイルに変更を加えている。**`main` から `src/javi/` を削除する前に**、Javier の進行中 ops が `feature/operations`(または別サブブランチ)に完全に保持されていることを本人と確認する必要がある。
+
+#### アクション項目 — 本日の parser-merge ブランチ作業
+
+- [ ] So:`so/phase1-stack-parser` を checkout、`so/parser-merge` として派生ブランチを切る。
+- [ ] So:T6 — `tail` → `bottom` に rename(header と stack helper 全体)。
+- [ ] So:T5 — `stack_init` シグネチャを `void stack_init(t_stack *)` に変更、`main.c` で `t_stack a;` 使用、`stack_free` 内でノード解放後にフィールド reset。
+- [ ] So:T7 — ノード生成を `create_node(int value)` + `stack_add_back(t_stack *, int)` に分離。未使用 `index` 引数を削除。
+- [ ] So:T10 — `parse_args` で `flag_count` を追跡、`≥ 2` で `STATUS_ERROR` を return。
+- [ ] So:既存 17 テスト + 新テスト(`./push_swap --simple --medium 1 2 3` → Error、`./push_swap --simple` → 成功)+ 成功/失敗 path 両方の valgrind で確認。
+
+#### アクション項目 — 将来繰越(main 統合時)
+
+- [ ] So:main 統合時、`src/javi/` を削除(Javier の ops 作業の保持を本人と確認後)。
+- [ ] So:main 統合時、`error_msg.c`、`stack_to_array.c`、`sort_int_array.c`、`find_index.c` を `main` から削除(`so/parser-merge` の設計に置換)。
+
+#### アクション項目 — Javier 側(独立作業)
+
+- [ ] Javier:自分側の `safe_atol` 修正(本人が宣言済み)。
+- [ ] 両者:Phase 2 命令ドラフト完了後に統合ミーティング。
