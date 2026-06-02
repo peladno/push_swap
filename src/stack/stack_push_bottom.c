@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 17:00:19 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/31 17:16:42 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 17:42:00 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ t_status	stack_push_bottom(t_stack *stack_a, int value, int index)
 	{
 		new_node->prev = NULL;
 		stack_a->top = new_node;
-		stack_a->tail = new_node;
+		stack_a->bottom = new_node;
 	}
 	else
 	{
-		new_node->prev = stack_a->tail;
-		stack_a->tail->next = new_node;
-		stack_a->tail = new_node;
+		new_node->prev = stack_a->bottom;
+		stack_a->bottom->next = new_node;
+		stack_a->bottom = new_node;
 	}
 	stack_a->size++;
 	return (STATUS_OK);

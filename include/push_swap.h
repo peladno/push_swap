@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/31 17:19:21 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 17:41:09 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_node
 typedef struct s_stack
 {
 	t_node			*top;
-	t_node			*tail;
+	t_node			*bottom;
 	int				size;
 }					t_stack;
 
