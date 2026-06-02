@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/02 17:41:09 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 19:03:42 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ typedef enum e_status
 	STATUS_ERROR
 }					t_status;
 
+t_node				*create_node(int value);
 t_stack				*stack_init(void);
 void				stack_free(t_stack *stack_a);
-t_status			stack_push_bottom(t_stack *stack_a, int value, int index);
+t_status			stack_push_bottom(t_stack *stack_a, int value);
 void				coord_compress(t_stack *stack_a);
 t_status			validate_token(const char *tok, int *out_value);
 void				free_split(char **tokens);

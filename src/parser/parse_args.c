@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 17:06:12 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/31 17:25:19 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 19:08:12 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static t_status	process_one_token(char *token, t_stack *stack_a)
 
 	if (validate_token(token, &value) != STATUS_OK)
 		return (STATUS_ERROR);
-	if (stack_push_bottom(stack_a, value, 0) != STATUS_OK)
+	if (stack_push_bottom(stack_a, value) != STATUS_OK)
 		return (STATUS_ERROR);
 	return (STATUS_OK);
 }
