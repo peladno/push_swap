@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 20:10:13 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/01 20:24:52 by jperez-u         ###   ########.fr       */
+/*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
+/*   Updated: 2026/06/02 19:47:41 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-# include <aio.h>
+# include "libft.h"
 # include <limits.h>
+# include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
 
 typedef struct s_node
 {
@@ -41,24 +41,21 @@ typedef enum e_strategy
 	STRATEGY_COMPLEX
 }					t_strategy;
 
-int					parse_args(int argc, char **argv, t_stack *a,
-						t_strategy *strategy);
+typedef enum e_status
+{
+	STATUS_OK,
+	STATUS_ERROR
+}					t_status;
 
-void				error_msg(void);
-int					ft_strcmp(const char *s1, const char *s2);
-int					safe_atol(const char *str, long *num);
-int					is_number(char *str);
-t_node				*create_node(int data);
-void				stack_init(t_stack *stack);
-int					stack_add_back(t_stack *stack, int value);
-int					has_duplicate(t_stack *a, int value);
-void				free_stack(t_stack *stack);
-
-int					coord_compress(t_stack *stack);
-int					*stack_to_array(t_stack *stack);
-void				sort_int_array(int *arr, int size);
-int					find_index(int *arr, int size, int value);
-char				**ft_split(char const *s, char c);
-int					parse_string_arg(char *arg, t_stack *a);
+t_node				*create_node(int value);
+void				stack_init(t_stack *stack_a);
+void				stack_free(t_stack *stack_a);
+t_status			stack_push_bottom(t_stack *stack_a, int value);
+void				coord_compress(t_stack *stack_a);
+t_status			validate_token(const char *tok, int *out_value);
+void				free_split(char **tokens);
+int					has_duplicates(t_stack *stack_a);
+t_status			parse_args(int argc, char **argv, t_stack *stack_a,
+						t_strategy *out_strategy);
 
 #endif
