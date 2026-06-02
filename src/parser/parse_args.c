@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 17:06:12 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/02 19:08:12 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/02 20:24:36 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,22 @@ t_status	parse_args(int argc, char **argv, t_stack *stack_a,
 		t_strategy *out_strategy)
 {
 	int	i;
+	int	flag_count;
 
 	if (argc == 1)
 		return (STATUS_OK);
 	*out_strategy = STRATEGY_ADAPTIVE;
 	i = 1;
+	flag_count = 0;
 	while (i < argc)
 	{
 		if (check_strategy(argv[i], out_strategy))
-			;
+			flag_count++;
 		else if (push_arg_tokens(argv[i], stack_a) != STATUS_OK)
 			return (STATUS_ERROR);
 		i++;
 	}
-	if (has_duplicates(stack_a))
+	if (flag_count > 1 || has_duplicates(stack_a))
 		return (STATUS_ERROR);
 	coord_compress(stack_a);
 	return (STATUS_OK);
