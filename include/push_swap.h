@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/02 19:47:41 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/04 21:15:23 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,39 @@ typedef enum e_status
 	STATUS_ERROR
 }					t_status;
 
-t_node				*create_node(int value);
-void				stack_init(t_stack *stack_a);
-void				stack_free(t_stack *stack_a);
-t_status			stack_push_bottom(t_stack *stack_a, int value);
-void				coord_compress(t_stack *stack_a);
-t_status			validate_token(const char *tok, int *out_value);
-void				free_split(char **tokens);
-int					has_duplicates(t_stack *stack_a);
-t_status			parse_args(int argc, char **argv, t_stack *stack_a,
-						t_strategy *out_strategy);
+typedef enum e_operation
+{
+	OP_NOT_DONE,
+	OP_DONE
+}					t_operation;
+
+int					parse_args(int argc, char **argv, t_stack *a,
+						t_strategy *strategy);
+
+void				error_msg(void);
+int					ft_strcmp(const char *s1, const char *s2);
+long				ft_atol(const char *nptr);
+int					is_number(char *str);
+void				ft_putstr(char *str);
+
+t_node				*create_node(int data);
+void				stack_init(t_stack *stack);
+int					stack_add_back(t_stack *stack, int value);
+int					has_duplicate(t_stack *a, int value);
+void				free_stack(t_stack *stack);
+
+int					coord_compress(t_stack *stack);
+int					*stack_to_array(t_stack *stack);
+void				sort_int_array(int *arr, int size);
+int					find_index(int *arr, int size, int value);
+char				**ft_split(char const *s, char c);
+int					parse_string_arg(char *arg, t_stack *a);
+
+void				sa(t_stack *a);
+void				sb(t_stack *b);
+void				ss(t_stack *a, t_stack *b);
+
+void				pa(t_stack *a, t_stack *b);
+void				pb(t_stack *a, t_stack *b);
 
 #endif
