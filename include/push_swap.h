@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/02 19:47:41 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:33:34 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,12 @@ typedef enum e_status
 	STATUS_ERROR
 }					t_status;
 
+typedef enum e_operation
+{
+	OP_NOT_DONE,
+	OP_DONE
+}					t_operation;
+
 t_node				*create_node(int value);
 void				stack_init(t_stack *stack_a);
 void				stack_free(t_stack *stack_a);
@@ -57,5 +63,16 @@ void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
 t_status			parse_args(int argc, char **argv, t_stack *stack_a,
 						t_strategy *out_strategy);
+t_operation			sa(t_stack *stack_a);
+t_operation			sb(t_stack *stack_b);
+t_operation			ss(t_stack *stack_a, t_stack *stack_b);
+t_operation			pa(t_stack *stack_a, t_stack *stack_b);
+t_operation			pb(t_stack *stack_a, t_stack *stack_b);
+t_operation			ra(t_stack *stack_a);
+t_operation			rb(t_stack *stack_b);
+t_operation			rr(t_stack *stack_a, t_stack *stack_b);
+t_operation			rra(t_stack *stack_a);
+t_operation			rrb(t_stack *stack_b);
+t_operation			rrr(t_stack *stack_a, t_stack *stack_b);
 
 #endif
