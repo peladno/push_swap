@@ -1,0 +1,71 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   swap.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/04 19:57:14 by skusakab          #+#    #+#             */
+/*   Updated: 2026/06/04 23:05:42 by skusakab         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "push_swap.h"
+
+static t_operation	swap(t_stack *stack)
+{
+	t_node	*first;
+	t_node	*second;
+	t_node	*third;
+
+	if (stack->size < 2)
+		return (OP_NOT_DONE);
+	first = stack->top;
+	second = first->next;
+	third = second->next;
+	second->prev = NULL;
+	second->next = first;
+	first->prev = second;
+	if (third)
+	{
+		first->next = third;
+		third->prev = first;
+	}
+	else
+	{
+		first->next = NULL;
+		stack->bottom = first;
+	}
+	stack->top = second;
+	return (OP_DONE);
+}
+
+t_operation	sa(t_stack *stack_a)
+{
+	t_operation	result;
+
+	result = swap(stack_a);
+	if (result == OP_DONE)
+		ft_putstr_fd("sa\n", 1);
+	return (result);
+}
+
+t_operation	sb(t_stack *stack_b)
+{
+	t_operation	result;
+
+	result = swap(stack_b);
+	if (result == OP_DONE)
+		ft_putstr_fd("sb\n", 1);
+	return (result);
+}
+
+t_operation	ss(t_stack *stack_a, t_stack *stack_b)
+{
+	if (stack_a->size < 2 || stack_b->size < 2)
+		return (OP_NOT_DONE);
+	swap(stack_a);
+	swap(stack_b);
+	ft_putstr_fd("ss\n", 1);
+	return (OP_DONE);
+}
