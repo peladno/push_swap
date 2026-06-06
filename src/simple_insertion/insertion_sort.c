@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 14:22:02 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/06 17:33:31 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 18:09:32 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,19 @@ static t_node	*find_x_below(t_stack *stack, int x_index)
 
 static int	get_pos(t_stack *s, t_node *target)
 {
-	// TODO
+	t_node	*cur;
+	int		pos;
+
+	cur = s->top;
+	pos = 0;
+	while (cur)
+	{
+		if (cur == target)
+			return (pos);
+		cur = cur->next;
+		pos++;
+	}
+	return (-1);
 }
 
 static void	rotate_b_to_top(t_stack *b, t_node *target)
