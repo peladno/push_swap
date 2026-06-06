@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/04 21:18:23 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 14:38:06 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,30 @@ typedef enum e_operation
 	OP_DONE
 }					t_operation;
 
+typedef struct s_bench
+{
+	long			total_ops;
+
+	long			sa;
+	long			sb;
+	long			ss;
+	long			pa;
+	long			pb;
+	long			ra;
+	long			rb;
+	long			rr;
+	long			rra;
+	long			rrb;
+	long			rrr;
+
+	char			*strategy;
+	int				n;
+	long			rotations;
+	long			inserts;
+	long			max_depth;
+
+}					t_bench;
+
 int					parse_args(int argc, char **argv, t_stack *a,
 						t_strategy *strategy);
 
@@ -89,5 +113,7 @@ void				rrr(t_stack *a, t_stack *b);
 void				ra(t_stack *a);
 void				rb(t_stack *b);
 void				rr(t_stack *a, t_stack *b);
+
+void				insertion_sort(t_stack *a, t_stack *b, t_bench *bench);
 
 #endif
