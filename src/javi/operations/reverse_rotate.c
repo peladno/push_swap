@@ -6,10 +6,11 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 20:36:34 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/04 21:14:52 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:03:49 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "push_swap.h"
 
 static t_operation	reverse_rotate(t_stack *stack)
@@ -31,17 +32,17 @@ static t_operation	reverse_rotate(t_stack *stack)
 void	rra(t_stack *a)
 {
 	if (reverse_rotate(a) == OP_DONE)
-		ft_putstr("rra\n");
+		ft_putstr_fd("rra\n");
 }
 
 void	rrb(t_stack *b)
 {
 	if (reverse_rotate(b) == OP_DONE)
-		ft_putstr("rrb\n");
+		ft_putstr_fd("rrb\n");
 }
 
 void	rrr(t_stack *a, t_stack *b)
 {
 	if (reverse_rotate(a) == OP_DONE && reverse_rotate(b) == OP_DONE)
-		ft_putstr("rrr\n");
+		ft_putstr_fd("rrr\n");
 }

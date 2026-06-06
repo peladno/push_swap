@@ -6,10 +6,11 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 16:02:28 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/01 21:38:48 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:04:29 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "push_swap.h"
 
 static int	push(t_stack *dst, t_stack *src)
@@ -39,11 +40,11 @@ static int	push(t_stack *dst, t_stack *src)
 void	pa(t_stack *a, t_stack *b)
 {
 	if (push(a, b) == STATUS_OK)
-		ft_putstr("pa\n");
+		ft_putstr_fd("pa\n");
 }
 
 void	pb(t_stack *a, t_stack *b)
 {
 	if (push(b, a) == STATUS_OK)
-		ft_putstr("pb\n");
+		ft_putstr_fd("pb\n");
 }

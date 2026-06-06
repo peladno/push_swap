@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/06 14:38:06 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:13:50 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,25 +79,16 @@ typedef struct s_bench
 
 int					parse_args(int argc, char **argv, t_stack *a,
 						t_strategy *strategy);
-
-void				error_msg(void);
-int					ft_strcmp(const char *s1, const char *s2);
-long				ft_atol(const char *nptr);
-int					is_number(char *str);
-void				ft_putstr(char *str);
+void				free_split(char **tokens);
+int					coord_compress(t_stack *stack);
+t_status			validate_token(const char *token, int *out_value);
 
 t_node				*create_node(int data);
 void				stack_init(t_stack *stack);
-int					stack_add_back(t_stack *stack, int value);
-int					has_duplicate(t_stack *a, int value);
-void				free_stack(t_stack *stack);
+void				stack_free(t_stack *stack_a);
+t_status			stack_push_bottom(t_stack *stack_a, int value);
 
-int					coord_compress(t_stack *stack);
-int					*stack_to_array(t_stack *stack);
-void				sort_int_array(int *arr, int size);
-int					find_index(int *arr, int size, int value);
-char				**ft_split(char const *s, char c);
-int					parse_string_arg(char *arg, t_stack *a);
+int					has_duplicates(t_stack *stack_a);
 
 void				sa(t_stack *a);
 void				sb(t_stack *b);
