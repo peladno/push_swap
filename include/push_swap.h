@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/06 16:13:50 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/06 16:17:26 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,12 @@ int					parse_args(int argc, char **argv, t_stack *a,
 void				free_split(char **tokens);
 int					coord_compress(t_stack *stack);
 t_status			validate_token(const char *token, int *out_value);
+int					has_duplicates(t_stack *stack_a);
 
 t_node				*create_node(int data);
 void				stack_init(t_stack *stack);
 void				stack_free(t_stack *stack_a);
 t_status			stack_push_bottom(t_stack *stack_a, int value);
-
-int					has_duplicates(t_stack *stack_a);
 
 void				sa(t_stack *a);
 void				sb(t_stack *b);
