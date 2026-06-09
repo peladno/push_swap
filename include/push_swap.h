@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/06 16:17:26 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/09 21:14:05 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void				ra(t_stack *a);
 void				rb(t_stack *b);
 void				rr(t_stack *a, t_stack *b);
 
-void				insertion_sort(t_stack *a, t_stack *b, t_bench *bench);
+t_node				*find_x_below(t_stack *s, int x);
+void				rotate_b_to_top(t_stack *b, t_node *target);
+void				insertion_sort(t_stack *a, t_stack *b);
 
 #endif

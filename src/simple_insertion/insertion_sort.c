@@ -6,97 +6,93 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/06 14:22:02 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/06 18:09:32 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/09 21:12:48 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static t_node	*find_x_below(t_stack *stack, int x_index)
+static void	insert_all_from_a_to_b(t_stack *a, t_stack *b)
 {
-	t_node	*cur;
-	t_node	*best;
-	int		max_index;
+	t_node	*x;
+	t_node	*x_below;
 
-	cur = stack->top;
-	best = NULL;
-	max_index = -1;
-	while (cur)
-	{
-		if (cur->index < x_index)
-		{
-			if (!best || cur->index > best->index)
-				best = cur;
-		}
-		if (cur->index > max_index)
-			max_index = cur->index;
-		cur = cur->next;
-	}
-	if (best)
-		return (best);
-	cur = stack->top;
-	while (cur)
-	{
-		if (cur->index == max_index)
-			return (cur);
-		cur = cur->next;
-	}
-	return (NULL);
-}
-
-// static t_node	*find_x_below(t_stack *s, int x)
-// {
-// 	t_node	*cur;
-// 	t_node	*best;
-// 	int		max;
-
-// 	cur = s->top;
-// 	best = NULL;
-// 	max = -1;
-// 	while (cur)
-// 	{
-// 		if (cur->index < x && (!best || cur->index > best->index))
-// 			best = cur;
-// 		if (cur->index > max)
-// 			max = cur->index;
-// 		cur = cur->next;
-// 	}
-// 	if (best)
-// 		return (best);
-// 	cur = s->top;
-// 	while (cur)
-// 	{
-// 		if (cur->index == max)
-// 			return (cur);
-// 		cur = cur->next;
-// 	}
-// 	return (NULL);
-// }
-
-static int	get_pos(t_stack *s, t_node *target)
-{
-	t_node	*cur;
-	int		pos;
-
-	cur = s->top;
-	pos = 0;
-	while (cur)
-	{
-		if (cur == target)
-			return (pos);
-		cur = cur->next;
-		pos++;
-	}
-	return (-1);
-}
-
-static void	rotate_b_to_top(t_stack *b, t_node *target)
-{
-	// TODO
-}
-
-void	insertion_sort(t_stack *a, t_stack *b, t_bench *bench)
-{
-	// TODO
 	pb(a, b);
+	while (a->size > 0)
+	{
+		x = a->top;
+		x_below = find_x_below(b, x->index);
+		rotate_b_to_top(b, x_below);
+		pb(a, b);
+	}
 }
+
+static t_node	*find_max_node(t_stack *b)
+{
+	t_node	*cur;
+	t_node	*max_node;
+
+	cur = b->top;
+	max_node = cur;
+	while (cur)
+	{
+		if (cur->index > max_node->index)
+			max_node = cur;
+		cur = cur->next;
+	}
+	return (max_node);
+}
+
+static void	finalize_b(t_stack *b)
+{
+	t_node	*max_node;
+
+	max_node = find_max_node(b);
+	rotate_b_to_top(b, max_node);
+}
+
+static void	return_all_to_a(t_stack *a, t_stack *b)
+{
+	while (b->size > 0)
+		pa(a, b);
+}
+
+void	insertion_sort(t_stack *a, t_stack *b)
+{
+	if (a->size < 2)
+		return ;
+	insert_all_from_a_to_b(a, b);
+	finalize_b(b);
+	return_all_to_a(a, b);
+}
+
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// int	main(void)
+// {
+// 	t_stack	a;
+// 	t_stack	b;
+// 	t_node	*cur;
+
+// 	a.top = NULL;
+// 	a.bottom = NULL;
+// 	a.size = 0;
+// 	b.top = NULL;
+// 	b.bottom = NULL;
+// 	b.size = 0;
+// 	push_top(&a, new_node(3, 2));
+// 	push_top(&a, new_node(1, 0));
+// 	push_top(&a, new_node(5, 4));
+// 	push_top(&a, new_node(2, 1));
+// 	push_top(&a, new_node(4, 3));
+// 	insertion_sort(&a, &b);
+// 	cur = a.top;
+// 	while (cur)
+// 	{
+// 		printf("%d ", cur->value);
+// 		cur = cur->next;
+// 	}
+// 	printf("\n");
+// 	return (0);
+// }
