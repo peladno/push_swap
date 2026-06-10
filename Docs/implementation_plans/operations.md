@@ -51,13 +51,22 @@ t_operation  rrr(t_stack *a, t_stack *b);
 
 ```
 src/operations/
-├── swap.c             — sa, sb, ss + static swap_top
+├── swap.c             — sa, sb, ss + static swap
 ├── push.c             — pa, pb + static push
-├── rotate.c           — ra, rb, rr + static rotate_top
-└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate_top
+├── rotate.c           — ra, rb, rr + static rotate
+└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate
 ```
 
 Family-grouped: each file holds 1 worker + 2-3 wrappers. Stays under Norm's 5-function-per-file limit and matches subject vocabulary.
+
+### Worker local naming convention
+
+Settled at the 2026-06-10 integration (both partners independently landed on the same split):
+
+- **Workers that manipulate multiple adjacent nodes** use **positional** names: `first` / `second` / `third`. Only `swap` qualifies — its essence is the relationship between three adjacent nodes.
+- **Workers that move a single node** use **semantic** names: `old_top` (rotate), `old_bottom` (reverse_rotate), `node` (push). The essence is "which one node moves and where".
+
+This is why `swap.c` reads differently from the other three families — it's a deliberate, documented split, not an inconsistency. NULL guards (`if (!stack || ...)`) sit in every worker, and the dual-stack atomic wrappers (`ss`/`rr`/`rrr`) carry the same NULL guard in their precondition check for consistency.
 
 ### Wrapper / worker pattern
 
@@ -218,13 +227,22 @@ t_operation  rrr(t_stack *a, t_stack *b);
 
 ```
 src/operations/
-├── swap.c             — sa, sb, ss + static swap_top
+├── swap.c             — sa, sb, ss + static swap
 ├── push.c             — pa, pb + static push
-├── rotate.c           — ra, rb, rr + static rotate_top
-└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate_top
+├── rotate.c           — ra, rb, rr + static rotate
+└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate
 ```
 
 family グルーピング:1 ファイル 1 worker + 2〜3 wrapper。Norm 5 関数制限内、subject 用語と一致。
+
+### Worker ローカル命名規約
+
+2026-06-10 の統合で確定(両者が無調整で同じ使い分けに到達):
+
+- **複数の隣接ノードを操作する worker** は **positional** 命名:`first` / `second` / `third`。該当は `swap` のみ —— 3 つの隣接ノードの**関係**が操作の本質だから。
+- **単一ノードを移動する worker** は **semantic** 命名:`old_top`(rotate)、`old_bottom`(reverse_rotate)、`node`(push)。**どの 1 ノードがどこへ動くか**が本質。
+
+これが `swap.c` だけ他 3 family と読み味が違う理由 —— 不整合ではなく、意図的で documented な使い分け。NULL guard(`if (!stack || ...)`)は全 worker に配置、dual-stack の atomic wrapper(`ss`/`rr`/`rrr`)も前提チェックに同じ NULL guard を持って整合させる。
 
 ### Wrapper / worker パターン
 

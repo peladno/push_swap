@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 18:01:35 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/04 22:08:09 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/10 17:28:18 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,24 @@
 
 static t_operation	push(t_stack *stack_from, t_stack *stack_to)
 {
-	t_node	*from_first;
+	t_node	*node;
 
-	if (stack_from->size == 0)
+	if (!stack_from || !stack_to || stack_from->size == 0)
 		return (OP_NOT_DONE);
-	from_first = stack_from->top;
-	stack_from->top = from_first->next;
+	node = stack_from->top;
+	stack_from->top = node->next;
 	if (stack_from->top)
 		stack_from->top->prev = NULL;
 	else
 		stack_from->bottom = NULL;
 	stack_from->size--;
-	from_first->next = stack_to->top;
+	node->next = stack_to->top;
+	node->prev = NULL;
 	if (stack_to->top)
-		stack_to->top->prev = from_first;
+		stack_to->top->prev = node;
 	else
-		stack_to->bottom = from_first;
-	stack_to->top = from_first;
+		stack_to->bottom = node;
+	stack_to->top = node;
 	stack_to->size++;
 	return (OP_DONE);
 }

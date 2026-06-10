@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 19:57:14 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/04 23:05:42 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/10 18:02:11 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_operation	swap(t_stack *stack)
 	t_node	*second;
 	t_node	*third;
 
-	if (stack->size < 2)
+	if (!stack || stack->size < 2)
 		return (OP_NOT_DONE);
 	first = stack->top;
 	second = first->next;
@@ -62,7 +62,7 @@ t_operation	sb(t_stack *stack_b)
 
 t_operation	ss(t_stack *stack_a, t_stack *stack_b)
 {
-	if (stack_a->size < 2 || stack_b->size < 2)
+	if (!stack_a || !stack_b || stack_a->size < 2 || stack_b->size < 2)
 		return (OP_NOT_DONE);
 	swap(stack_a);
 	swap(stack_b);

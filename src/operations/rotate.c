@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 20:48:00 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/04 23:05:11 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/10 18:01:47 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,17 @@
 
 static t_operation	rotate(t_stack *stack)
 {
-	t_node	*first;
-	t_node	*second;
-	t_node	*last;
+	t_node	*old_top;
 
-	if (stack->size < 2)
+	if (!stack || stack->size < 2)
 		return (OP_NOT_DONE);
-	first = stack->top;
-	second = first->next;
-	last = stack->bottom;
-	first->prev = last;
-	first->next = NULL;
-	second->prev = NULL;
-	last->next = first;
-	stack->top = second;
-	stack->bottom = first;
+	old_top = stack->top;
+	stack->top = old_top->next;
+	stack->top->prev = NULL;
+	stack->bottom->next = old_top;
+	old_top->prev = stack->bottom;
+	stack->bottom = old_top;
+	old_top->next = NULL;
 	return (OP_DONE);
 }
 
@@ -54,7 +50,7 @@ t_operation	rb(t_stack *stack_b)
 
 t_operation	rr(t_stack *stack_a, t_stack *stack_b)
 {
-	if (stack_a->size < 2 || stack_b->size < 2)
+	if (!stack_a || !stack_b || stack_a->size < 2 || stack_b->size < 2)
 		return (OP_NOT_DONE);
 	rotate(stack_a);
 	rotate(stack_b);
