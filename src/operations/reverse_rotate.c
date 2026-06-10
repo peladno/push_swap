@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reverse_rotate.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/02 20:36:34 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/04 21:14:52 by jperez-u         ###   ########.fr       */
+/*   Created: 2026/06/04 21:08:32 by skusakab          #+#    #+#             */
+/*   Updated: 2026/06/10 18:33:04 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,32 @@ static t_operation	reverse_rotate(t_stack *stack)
 	return (OP_DONE);
 }
 
-void	rra(t_stack *a)
+t_operation	rra(t_stack *stack_a)
 {
-	if (reverse_rotate(a) == OP_DONE)
-		ft_putstr("rra\n");
+	t_operation	result;
+
+	result = reverse_rotate(stack_a);
+	if (result == OP_DONE)
+		ft_putstr_fd("rra\n", 1);
+	return (result);
 }
 
-void	rrb(t_stack *b)
+t_operation	rrb(t_stack *stack_b)
 {
-	if (reverse_rotate(b) == OP_DONE)
-		ft_putstr("rrb\n");
+	t_operation	result;
+
+	result = reverse_rotate(stack_b);
+	if (result == OP_DONE)
+		ft_putstr_fd("rrb\n", 1);
+	return (result);
 }
 
-void	rrr(t_stack *a, t_stack *b)
+t_operation	rrr(t_stack *stack_a, t_stack *stack_b)
 {
-	if (reverse_rotate(a) == OP_DONE && reverse_rotate(b) == OP_DONE)
-		ft_putstr("rrr\n");
+	if (!stack_a || !stack_b || stack_a->size < 2 || stack_b->size < 2)
+		return (OP_NOT_DONE);
+	reverse_rotate(stack_a);
+	reverse_rotate(stack_b);
+	ft_putstr_fd("rrr\n", 1);
+	return (OP_DONE);
 }
