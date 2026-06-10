@@ -19,12 +19,28 @@ NOT covered: coordinate compression itself (see `coordinate-compression.md`), di
 ### Interface
 
 ```c
-void radix_sort_lsd(t_stack *a, t_stack *b, t_bench *bench);
+void radix_sort(t_stack *a, t_stack *b);
 ```
 
 - Inputs: `a` (compressed, size n), `b` (empty).
 - Outputs: `a` sorted ascending top→bot, `b` empty.
-- Side effect: emits push_swap operations, updates `bench` counters.
+- Side effect: emits push_swap operations to stdout via the op wrappers.
+
+> **2026-06-10 revision**: dropped the `t_bench *bench` parameter from the
+> original draft. Per the `operations.md` decision, op counting for `--bench`
+> is a Phase 8 concern handled separately (so the canonical op wrappers stay
+> clean) — the sort function itself just calls `pb`/`ra`/`pa` and is unaware
+> of benchmarking. Renamed `radix_sort_lsd` → `radix_sort` to match the
+> `insertion_sort` / `chunk_sort` naming of the other tiers (eases the
+> Phase 7 dispatcher).
+
+File layout: `src/complex/radix_sort.c`, holding:
+
+```c
+static int   count_bits(int n);                          /* ceil(log2(n)) */
+static void  process_bit(t_stack *a, t_stack *b, int bit); /* one LSD pass */
+void         radix_sort(t_stack *a, t_stack *b);          /* orchestration */
+```
 
 ### Implementation outline
 
@@ -108,12 +124,26 @@ This is the defendable argument required by subject VI.3.3:
 ### Interface
 
 ```c
-void radix_sort_lsd(t_stack *a, t_stack *b, t_bench *bench);
+void radix_sort(t_stack *a, t_stack *b);
 ```
 
 - 入力:`a`(圧縮済み、サイズ n)、`b`(空)。
 - 出力:`a` が昇順(top→bot)、`b` が空。
-- 副作用:push_swap 命令を出力、`bench` カウンタを更新。
+- 副作用:op wrapper 経由で push_swap 命令を stdout に出力。
+
+> **2026-06-10 改訂**:元ドラフトの `t_bench *bench` 引数を削除。`operations.md`
+> の決定通り、`--bench` 用の op カウントは Phase 8 で別途扱う(canonical な op
+> wrapper を汚さない)—— ソート関数自体は `pb`/`ra`/`pa` を呼ぶだけで benchmark
+> を意識しない。`radix_sort_lsd` → `radix_sort` に rename し、他 tier の
+> `insertion_sort` / `chunk_sort` 命名と統一(Phase 7 ディスパッチャが扱いやすい)。
+
+ファイル構成:`src/complex/radix_sort.c`、以下を保持:
+
+```c
+static int   count_bits(int n);                          /* ceil(log2(n)) */
+static void  process_bit(t_stack *a, t_stack *b, int bit); /* 1 LSD pass */
+void         radix_sort(t_stack *a, t_stack *b);          /* orchestration */
+```
 
 ### Implementation outline
 
