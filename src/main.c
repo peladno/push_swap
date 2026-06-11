@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/04 22:52:38 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/10 21:35:57 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,35 +61,37 @@ int	main(int argc, char **argv)
 	{
 		ft_putstr_fd("Error\n", 2);
 		stack_free(&stack_a);
-		stack_init(&stack_b);
+		stack_free(&stack_b);
 		return (1);
 	}
 	debug_print(&stack_a, &stack_b, "stack init");
-	sa(&stack_a);
-	debug_print(&stack_a, &stack_b, "after sa");
-	ra(&stack_a);
-	debug_print(&stack_a, &stack_b, "after ra");
-	rra(&stack_a);
-	debug_print(&stack_a, &stack_b, "after rra");
-	pb(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after pb");
-	pb(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after pb");
-	sb(&stack_b);
-	debug_print(&stack_a, &stack_b, "after sb");
-	ss(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after ss");
-	rb(&stack_b);
-	debug_print(&stack_a, &stack_b, "after rb");
-	rr(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after rr");
-	rrr(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after rrr");
-	pa(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after pa");
-	ss(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b,
-		"after ss with b size 1 (should not print 'ss')");
+	radix_sort(&stack_a, &stack_b);
+	debug_print(&stack_a, &stack_b, "after radix");
+	// sa(&stack_a);
+	// debug_print(&stack_a, &stack_b, "after sa");
+	// ra(&stack_a);
+	// debug_print(&stack_a, &stack_b, "after ra");
+	// rra(&stack_a);
+	// debug_print(&stack_a, &stack_b, "after rra");
+	// pb(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after pb");
+	// pb(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after pb");
+	// sb(&stack_b);
+	// debug_print(&stack_a, &stack_b, "after sb");
+	// ss(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after ss");
+	// rb(&stack_b);
+	// debug_print(&stack_a, &stack_b, "after rb");
+	// rr(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after rr");
+	// rrr(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after rrr");
+	// pa(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after pa");
+	// ss(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b,
+	// 	"after ss with b size 1 (should not print 'ss')");
 	stack_free(&stack_a);
 	stack_free(&stack_b);
 	return (0);

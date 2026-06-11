@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 17:43:50 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/10 20:14:27 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ t_operation			rr(t_stack *stack_a, t_stack *stack_b);
 t_operation			rra(t_stack *stack_a);
 t_operation			rrb(t_stack *stack_b);
 t_operation			rrr(t_stack *stack_a, t_stack *stack_b);
-double				compute_disorder(t_stack *stack_a);
+void				radix_sort(t_stack *stack_a, t_stack *stack_b);
 
 #endif
