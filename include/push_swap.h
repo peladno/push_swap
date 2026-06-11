@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2026/06/09 21:14:05 by jperez-u         ###   ########.fr       */
+=======
+/*   Updated: 2026/06/10 20:14:27 by skusakab         ###   ########.fr       */
+>>>>>>> master
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +57,7 @@ typedef enum e_operation
 	OP_DONE
 }					t_operation;
 
+<<<<<<< HEAD
 typedef struct s_bench
 {
 	long			total_ops;
@@ -103,6 +108,30 @@ void				rrr(t_stack *a, t_stack *b);
 void				ra(t_stack *a);
 void				rb(t_stack *b);
 void				rr(t_stack *a, t_stack *b);
+=======
+t_node				*create_node(int value);
+void				stack_init(t_stack *stack_a);
+void				stack_free(t_stack *stack_a);
+t_status			stack_push_bottom(t_stack *stack_a, int value);
+void				coord_compress(t_stack *stack_a);
+t_status			validate_token(const char *tok, int *out_value);
+void				free_split(char **tokens);
+int					has_duplicates(t_stack *stack_a);
+t_status			parse_args(int argc, char **argv, t_stack *stack_a,
+						t_strategy *out_strategy);
+t_operation			sa(t_stack *stack_a);
+t_operation			sb(t_stack *stack_b);
+t_operation			ss(t_stack *stack_a, t_stack *stack_b);
+t_operation			pa(t_stack *stack_a, t_stack *stack_b);
+t_operation			pb(t_stack *stack_a, t_stack *stack_b);
+t_operation			ra(t_stack *stack_a);
+t_operation			rb(t_stack *stack_b);
+t_operation			rr(t_stack *stack_a, t_stack *stack_b);
+t_operation			rra(t_stack *stack_a);
+t_operation			rrb(t_stack *stack_b);
+t_operation			rrr(t_stack *stack_a, t_stack *stack_b);
+void				radix_sort(t_stack *stack_a, t_stack *stack_b);
+>>>>>>> master
 
 t_node				*find_x_below(t_stack *s, int x);
 void				rotate_b_to_top(t_stack *b, t_node *target);

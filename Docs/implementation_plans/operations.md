@@ -51,13 +51,22 @@ t_operation  rrr(t_stack *a, t_stack *b);
 
 ```
 src/operations/
-├── swap.c             — sa, sb, ss + static swap_top
+├── swap.c             — sa, sb, ss + static swap
 ├── push.c             — pa, pb + static push
-├── rotate.c           — ra, rb, rr + static rotate_top
-└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate_top
+├── rotate.c           — ra, rb, rr + static rotate
+└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate
 ```
 
 Family-grouped: each file holds 1 worker + 2-3 wrappers. Stays under Norm's 5-function-per-file limit and matches subject vocabulary.
+
+### Worker local naming convention
+
+Settled at the 2026-06-10 integration (both partners independently landed on the same split):
+
+- **Workers that manipulate multiple adjacent nodes** use **positional** names: `first` / `second` / `third`. Only `swap` qualifies — its essence is the relationship between three adjacent nodes.
+- **Workers that move a single node** use **semantic** names: `old_top` (rotate), `old_bottom` (reverse_rotate), `node` (push). The essence is "which one node moves and where".
+
+This is why `swap.c` reads differently from the other three families — it's a deliberate, documented split, not an inconsistency. NULL guards (`if (!stack || ...)`) sit in every worker, and the dual-stack atomic wrappers (`ss`/`rr`/`rrr`) carry the same NULL guard in their precondition check for consistency.
 
 ### Wrapper / worker pattern
 
@@ -77,8 +86,24 @@ t_operation  sa(t_stack *a)
 ```
 
 Two implementation notes:
-1. The wrapper calls the worker once and stores the result, then conditionally prints. Calling the worker twice (once to test, once to do) is wrong — the second call would no-op or double-apply.
-2. `ss`/`rr`/`rrr` call the worker on each stack independently and print the combined line only if both succeeded. If only one succeeded, the spec is ambiguous — we choose: print the combined op only when both stacks moved, otherwise no print and return `OP_NOT_DONE`. This matches "ss = sa AND sb simultaneously" reading and is consistent with Javier's implementation.
+1. Single-stack wrappers call the worker once and store the result, then conditionally print. Calling the worker twice (once to test, once to do) is wrong — the second call would no-op or double-apply.
+2. **Dual-stack wrappers (`ss`/`rr`/`rrr`) are atomic.** The precondition `size >= 2` is checked on **both** stacks **before any mutation**. If either stack fails the check, the wrapper returns `OP_NOT_DONE` without touching either stack. On success, both workers are called (guaranteed to apply), the combined op is printed, and `OP_DONE` is returned.
+
+   ```c
+   t_operation  ss(t_stack *a, t_stack *b)
+   {
+       if (a->size < 2 || b->size < 2)
+           return (OP_NOT_DONE);
+       swap(a);
+       swap(b);
+       ft_putstr_fd("ss\n", 1);
+       return (OP_DONE);
+   }
+   ```
+
+   **Why atomic and not "call both workers, print only if both succeed"?** The non-atomic variant has a fatal flaw: when only one stack meets the precondition, that stack is silently mutated while no op line is printed. `checker_42` (the subject-mandated verifier) replays printed ops against the initial input and compares against the program's final state — if the final state shows a mutation that no printed op explains, `checker_42` reports KO. The non-atomic variant therefore breaks verification whenever a dual-stack wrapper is called with one stack below size 2.
+
+   The wrappers are also a defense-in-depth boundary: algorithm tiers (Phase 4-7) should never call `ss`/`rr`/`rrr` when only one stack is eligible, but if they do, the atomic check guarantees no silent state corruption.
 
 ### Implementation outline (per family)
 
@@ -148,9 +173,10 @@ Two implementation notes:
 ### Known divergence from Javier's parallel draft (as of 2026-06-02)
 
 For the integration meeting:
-- Javier's `swap.c` wrappers contain a **bug**: `if (swap_top(a) == STATUS_OK)` compares the worker's `t_operation` return against `STATUS_OK` (= 0 = `OP_NOT_DONE`). Result: the print fires when the op DID NOT happen, and is silent when it DID happen — inverted output. Source: `feature/operations` `src/javi/operations/swap.c` lines 39, 44, 49 (similar pattern in `push.c`).
-- Suggested fix on his side: either compare against `OP_DONE`, or unify the worker on `t_status` (no new enum).
-- So's draft avoids this by (a) making the worker return `t_operation` explicitly (not bare `int`) and (b) the wrapper compares against `OP_DONE`, not `STATUS_OK`.
+- Javier's `swap.c` wrappers contain a **comparison bug**: `if (swap_top(a) == STATUS_OK)` compares the worker's `t_operation` return against `STATUS_OK` (= 0 = `OP_NOT_DONE`). Result: the print fires when the op DID NOT happen, and is silent when it DID happen — inverted output. Source: `feature/operations` `src/javi/operations/swap.c` lines 39, 44, 49 (similar pattern in `push.c`).
+- Javier's `ss` is also **non-atomic** (worker called on both stacks independently, print only if both succeed). With one stack below `size 2`, the other gets silently mutated — see the "atomicity" rationale in §Wrapper / worker pattern above for why this breaks `checker_42`. Same risk applies to any future `rr` / `rrr` he writes in the same pattern.
+- Suggested fixes on his side: (1) compare against `OP_DONE` (or unify on `t_status` so no second enum), (2) add the precondition check to `ss` / `rr` / `rrr` before calling workers.
+- So's draft avoids both by (a) returning `t_operation` from the worker explicitly (not bare `int`), (b) comparing against `OP_DONE` in wrappers, and (c) atomic precondition check in all dual-stack wrappers.
 - Javier's `rotate.c` is a stub; `reverse_rotate.c` doesn't exist yet — independent so far.
 
 ---
@@ -201,13 +227,22 @@ t_operation  rrr(t_stack *a, t_stack *b);
 
 ```
 src/operations/
-├── swap.c             — sa, sb, ss + static swap_top
+├── swap.c             — sa, sb, ss + static swap
 ├── push.c             — pa, pb + static push
-├── rotate.c           — ra, rb, rr + static rotate_top
-└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate_top
+├── rotate.c           — ra, rb, rr + static rotate
+└── reverse_rotate.c   — rra, rrb, rrr + static reverse_rotate
 ```
 
 family グルーピング:1 ファイル 1 worker + 2〜3 wrapper。Norm 5 関数制限内、subject 用語と一致。
+
+### Worker ローカル命名規約
+
+2026-06-10 の統合で確定(両者が無調整で同じ使い分けに到達):
+
+- **複数の隣接ノードを操作する worker** は **positional** 命名:`first` / `second` / `third`。該当は `swap` のみ —— 3 つの隣接ノードの**関係**が操作の本質だから。
+- **単一ノードを移動する worker** は **semantic** 命名:`old_top`(rotate)、`old_bottom`(reverse_rotate)、`node`(push)。**どの 1 ノードがどこへ動くか**が本質。
+
+これが `swap.c` だけ他 3 family と読み味が違う理由 —— 不整合ではなく、意図的で documented な使い分け。NULL guard(`if (!stack || ...)`)は全 worker に配置、dual-stack の atomic wrapper(`ss`/`rr`/`rrr`)も前提チェックに同じ NULL guard を持って整合させる。
 
 ### Wrapper / worker パターン
 
@@ -230,8 +265,24 @@ t_operation  sa(t_stack *a)
 ```
 
 実装上の 2 点:
-1. wrapper は worker を **1 度だけ呼び**、結果を変数に保存してから print 判定。2 回呼ぶ(test + apply)は誤り —— 2 回目は no-op or 二重適用になる。
-2. `ss` / `rr` / `rrr` は 2 つの stack それぞれに worker を呼び、両方成功時のみ複合 op 名を print。片方しか成功しなかった場合の仕様は曖昧 —— 我々は **「両方動いた時のみ print、それ以外は no print + `OP_NOT_DONE` return」** を採用。「`ss` = `sa` AND `sb` を同時実行」の読みと整合、Javier の実装とも一致。
+1. 単一 stack wrapper は worker を **1 度だけ呼び**、結果を変数に保存してから print 判定。2 回呼ぶ(test + apply)は誤り —— 2 回目は no-op or 二重適用になる。
+2. **複数 stack wrapper(`ss` / `rr` / `rrr`)は atomic。** 前提条件 `size >= 2` を **両 stack** に対して **mutation 前に**チェックする。どちらかが未達なら、両 stack を触らずに `OP_NOT_DONE` 返却。成功時は両 worker を呼び(必ず適用される)、複合 op 名を print、`OP_DONE` 返却。
+
+   ```c
+   t_operation  ss(t_stack *a, t_stack *b)
+   {
+       if (a->size < 2 || b->size < 2)
+           return (OP_NOT_DONE);
+       swap(a);
+       swap(b);
+       ft_putstr_fd("ss\n", 1);
+       return (OP_DONE);
+   }
+   ```
+
+   **なぜ atomic で、「両 worker を呼んで両方成功時のみ print」では駄目か?** 非 atomic 版には致命的欠陥がある:片方の stack だけ前提を満たす場合、その stack は **silent に mutate されるのに op 名 print が無い**。subject 必須の `checker_42` 検証器は **print された op 列を初期入力に適用し、program の最終状態と一致するか比較する** —— 最終状態に「print されていない op の結果」が含まれていれば `checker_42` は **KO** を報告。非 atomic 版は dual-stack wrapper を片方 size 不足で呼ぶと必ず検証失敗する。
+
+   wrapper はまた **defense-in-depth の境界**:アルゴリズム tier(Phase 4-7)が片方の stack だけ eligible な状態で `ss`/`rr`/`rrr` を呼ぶことは本来あってはならないが、もし呼ばれた場合でも atomic チェックが silent state corruption を防ぐ。
 
 ### Implementation outline(family 別)
 
@@ -301,7 +352,8 @@ t_operation  sa(t_stack *a)
 ### Javier の並行ドラフトとの既知の相違(2026-06-02 時点)
 
 統合ミーティング用メモ:
-- Javier の `swap.c` の wrapper に **バグ**:`if (swap_top(a) == STATUS_OK)` が worker の `t_operation` return を `STATUS_OK`(= 0 = `OP_NOT_DONE`)と比較。結果:**op が動かなかった時に print、動いた時に silent** —— 出力が逆転。出所:`feature/operations` `src/javi/operations/swap.c` 39, 44, 49 行(`push.c` も同パターン)。
-- 修正案(彼の側):`OP_DONE` と比較する、または worker を `t_status` に統一(新 enum 無し)。
-- So のドラフトは(a)worker を明示的に `t_operation` 返却(bare `int` ではなく)、(b)wrapper も `OP_DONE` と比較 —— で回避。
+- Javier の `swap.c` の wrapper に **比較バグ**:`if (swap_top(a) == STATUS_OK)` が worker の `t_operation` return を `STATUS_OK`(= 0 = `OP_NOT_DONE`)と比較。結果:**op が動かなかった時に print、動いた時に silent** —— 出力が逆転。出所:`feature/operations` `src/javi/operations/swap.c` 39, 44, 49 行(`push.c` も同パターン)。
+- Javier の `ss` は **non-atomic**(両 stack 独立に worker 呼び、両方成功時のみ print)。片方が size < 2 のとき、もう片方が **silent に mutate** される —— 上の §Wrapper / worker パターン節の atomicity 根拠参照(`checker_42` が KO になる理由)。同じパターンで `rr`/`rrr` を書くと同じ罠。
+- 修正案(彼の側):(1)`OP_DONE` と比較(または worker を `t_status` に統一)、(2)`ss`/`rr`/`rrr` に前提条件チェックを追加してから worker 呼出。
+- So のドラフトは(a)worker を明示的に `t_operation` 返却(bare `int` ではなく)、(b)wrapper も `OP_DONE` と比較、(c)dual-stack wrapper すべてに atomic 前提チェック —— で両方の問題を回避。
 - Javier の `rotate.c` は stub、`reverse_rotate.c` は未作成 —— ここまでは独立。
