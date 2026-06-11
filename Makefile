@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/02 19:02:31 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/10 21:32:54 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,12 @@ SRCS		=	src/main.c \
 				src/parser/validate_token.c \
 				src/parser/free_split.c \
 				src/parser/has_duplicates.c \
-				src/parser/parse_args.c
+				src/parser/parse_args.c \
+				src/operations/swap.c \
+				src/operations/push.c \
+				src/operations/rotate.c \
+				src/operations/reverse_rotate.c \
+				src/algorithms/complex/radix_sort.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
