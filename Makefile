@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/10 21:53:45 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/11 17:44:35 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,8 @@ SRCS		=	src/main.c \
 				src/operations/swap.c \
 				src/operations/push.c \
 				src/operations/rotate.c \
-				src/operations/reverse_rotate.c
+				src/operations/reverse_rotate.c \
+				src/algorithms/adaptive/compute_disorder.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
