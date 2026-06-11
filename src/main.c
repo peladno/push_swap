@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/10 21:35:57 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/11 22:07:46 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	debug_print(&stack_a, &stack_b, "stack init");
-	radix_sort(&stack_a, &stack_b);
-	debug_print(&stack_a, &stack_b, "after radix");
+	chunk_sort(&stack_a, &stack_b);
+	debug_print(&stack_a, &stack_b, "after chunk_sort");
+	// radix_sort(&stack_a, &stack_b);
+	// debug_print(&stack_a, &stack_b, "after radix");
 	// sa(&stack_a);
 	// debug_print(&stack_a, &stack_b, "after sa");
 	// ra(&stack_a);

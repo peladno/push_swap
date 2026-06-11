@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 21:10:31 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/11 21:40:12 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
 t_status			parse_args(int argc, char **argv, t_stack *stack_a,
 						t_strategy *out_strategy);
+void				chunk_sort(t_stack *a, t_stack *b);
 t_operation			sa(t_stack *stack_a);
 t_operation			sb(t_stack *stack_b);
 t_operation			ss(t_stack *stack_a, t_stack *stack_b);

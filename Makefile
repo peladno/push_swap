@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
+#    By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/10 21:32:54 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/11 22:14:02 by jperez-u         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,9 @@ SRCS		=	src/main.c \
 				src/operations/push.c \
 				src/operations/rotate.c \
 				src/operations/reverse_rotate.c \
-				src/algorithms/complex/radix_sort.c
+				src/algorithms/complex/radix_sort.c \
+				src/algorithms/medium/chunk_sort.c \
+				src/algorithms/simple/insertion_sort.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
