@@ -25,7 +25,10 @@ SRCS		=	src/main.c \
 				src/operations/push.c \
 				src/operations/rotate.c \
 				src/operations/reverse_rotate.c \
-				src/algorithms/complex/radix_sort.c
+				src/algorithms/simple/insertion_sort.c \
+				src/algorithms/simple/insertion_utils.c \
+				src/algorithms/complex/radix_sort.c \
+				src/algorithms/adaptive/compute_disorder.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
