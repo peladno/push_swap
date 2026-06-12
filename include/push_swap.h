@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 21:13:02 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/12 16:51:15 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ typedef enum e_strategy
 	STRATEGY_COMPLEX
 }					t_strategy;
 
+typedef struct s_config
+{
+	t_strategy		strategy;
+	int				benched;
+}					t_config;
+
 typedef enum e_status
 {
 	STATUS_OK,
@@ -53,6 +59,30 @@ typedef enum e_operation
 	OP_DONE
 }					t_operation;
 
+typedef enum e_op_id
+{
+	OP_SA,
+	OP_SB,
+	OP_SS,
+	OP_PA,
+	OP_PB,
+	OP_RA,
+	OP_RB,
+	OP_RR,
+	OP_RRA,
+	OP_RRB,
+	OP_RRR,
+	OP_COUNT
+}					t_op_id;
+
+typedef struct s_bench
+{
+	int				count[OP_COUNT];
+	char			*strategy;
+	double			disorder;
+	int				enabled;
+}					t_bench;
+
 t_node				*create_node(int value);
 void				stack_init(t_stack *stack_a);
 void				stack_free(t_stack *stack_a);
@@ -62,7 +92,7 @@ t_status			validate_token(const char *tok, int *out_value);
 void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
 t_status			parse_args(int argc, char **argv, t_stack *stack_a,
-						t_strategy *out_strategy);
+						t_config *config);
 t_operation			sa(t_stack *stack_a);
 t_operation			sb(t_stack *stack_b);
 t_operation			ss(t_stack *stack_a, t_stack *stack_b);
@@ -79,6 +109,9 @@ void				radix_sort(t_stack *stack_a, t_stack *stack_b);
 t_node				*find_x_below(t_stack *s, int x);
 void				rotate_b_to_top(t_stack *b, t_node *target);
 void				insertion_sort(t_stack *a, t_stack *b);
+
 double				compute_disorder(t_stack *stack_a);
+void				bench_init(t_bench *bench, int enbaled, double disorder);
+void				bench_print(t_bench *bench);
 
 #endif

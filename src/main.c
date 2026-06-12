@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/10 21:35:57 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/12 16:51:31 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,13 @@ int	main(int argc, char **argv)
 {
 	t_stack		stack_a;
 	t_stack		stack_b;
-	t_strategy	strategy;
+	t_config	config;
 
 	if (argc == 1)
 		return (0);
 	stack_init(&stack_a);
 	stack_init(&stack_b);
-	strategy = STRATEGY_ADAPTIVE;
-	if (parse_args(argc, argv, &stack_a, &strategy) == STATUS_ERROR)
+	if (parse_args(argc, argv, &stack_a, &config) == STATUS_ERROR)
 	{
 		ft_putstr_fd("Error\n", 2);
 		stack_free(&stack_a);
