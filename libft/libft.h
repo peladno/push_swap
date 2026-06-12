@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 17:46:10 by skusakab          #+#    #+#             */
-/*   Updated: 2026/05/10 18:19:02 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/12 15:51:56 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <stdarg.h>
 # include <stddef.h>
 # include <stdint.h>
 # include <stdlib.h>
@@ -69,4 +70,13 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+int					ft_printf(const char *format, ...);
+int					print_format(char format, va_list args);
+int					print_char(int c);
+int					print_string(char *str);
+int					print_pointer(void *ptr);
+int					print_hex(unsigned int num, const char spec);
+int					print_number(int number);
+int					print_unsigned(unsigned int number);
+
 #endif

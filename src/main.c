@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:27:02 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 22:07:46 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/12 15:37:02 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	main(int argc, char **argv)
 	debug_print(&stack_a, &stack_b, "stack init");
 	chunk_sort(&stack_a, &stack_b);
 	debug_print(&stack_a, &stack_b, "after chunk_sort");
+	ft_printf("%d", 13);
 	// radix_sort(&stack_a, &stack_b);
 	// debug_print(&stack_a, &stack_b, "after radix");
 	// sa(&stack_a);
