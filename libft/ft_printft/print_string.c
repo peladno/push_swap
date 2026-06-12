@@ -21,7 +21,7 @@ int	print_string(char *str)
 	i = 0;
 	if (!str)
 	{
-		count += (write(1, "(null)", 6));
+		count += (write(2, "(null)", 6));
 		return (count);
 	}
 	while (str[i])

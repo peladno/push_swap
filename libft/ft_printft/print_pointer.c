@@ -34,7 +34,7 @@ int	print_pointer(void *ptr)
 		return (print_string("(nil)"));
 	address = (unsigned long)ptr;
 	count = 0;
-	count += write(1, "0x", 2);
+	count += write(2, "0x", 2);
 	count += print_hx(address);
 	return (count);
 }
