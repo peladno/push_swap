@@ -81,6 +81,7 @@ void				radix_sort(t_stack *stack_a, t_stack *stack_b);
 t_node				*find_x_below(t_stack *s, int x);
 void				rotate_b_to_top(t_stack *b, t_node *target);
 void				insertion_sort(t_stack *a, t_stack *b);
+double				compute_disorder(t_stack *stack_a);
 
 int					count_elements_in_chunk(t_stack *a, int chunk_idx,
 						int chunk_size);
