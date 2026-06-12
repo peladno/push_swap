@@ -6,7 +6,7 @@
 #    By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/11 22:14:02 by jperez-u         ###   ########.fr        #
+#    Updated: 2026/06/12 14:14:19 by jperez-u         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,12 @@ SRCS		=	src/main.c \
 				src/operations/reverse_rotate.c \
 				src/algorithms/complex/radix_sort.c \
 				src/algorithms/medium/chunk_sort.c \
-				src/algorithms/simple/insertion_sort.c
+				src/algorithms/medium/chunk_sort_core.c \
+				src/algorithms/medium/chunk_sort_rotations.c \
+				src/algorithms/medium/chunk_sort_utils.c \
+				src/algorithms/simple/insertion_sort.c \
+				src/algorithms/simple/insertion_utils.c \
+				
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)
