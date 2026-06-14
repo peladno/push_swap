@@ -6,7 +6,7 @@
 /*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 14:30:04 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/12 14:38:32 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/14 21:45:16 by jperez-u         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,57 @@ void	align_stack_b(t_stack *b)
 	rotate_b_to_target(b, max_pos);
 }
 
+static void	perform_combined_rotations(t_stack *a, t_stack *b,
+							int pos_a, int pos_b)
+{
+	int cost_a;
+	int cost_b;
+
+	if (!a || !b)
+		return ;
+	if (a->size > 0)
+		cost_a = (pos_a <= a->size / 2) ? pos_a : pos_a - a->size;
+	else
+		cost_a = 0;
+	if (b->size > 0)
+		cost_b = (pos_b <= b->size / 2) ? pos_b : pos_b - b->size;
+	else
+		cost_b = 0;
+
+	while (cost_a > 0 && cost_b > 0)
+	{
+		rr(a, b);
+		cost_a--;
+		cost_b--;
+	}
+	while (cost_a < 0 && cost_b < 0)
+	{
+		rrr(a, b);
+		cost_a++;
+		cost_b++;
+	}
+	while (cost_a > 0)
+	{
+		ra(a);
+		cost_a--;
+	}
+	while (cost_a < 0)
+	{
+		rra(a);
+		cost_a++;
+	}
+	while (cost_b > 0)
+	{
+		rb(b);
+		cost_b--;
+	}
+	while (cost_b < 0)
+	{
+		rrb(b);
+		cost_b++;
+	}
+}
+
 void	push_chunk_to_b(t_stack *a, t_stack *b, int c_idx, int c_size)
 {
 	int	pos_in_a;
@@ -96,9 +147,10 @@ void	push_chunk_to_b(t_stack *a, t_stack *b, int c_idx, int c_size)
 	while (remaining-- > 0)
 	{
 		pos_in_a = find_first_in_chunk_pos(a, lower, upper);
-		rotate_a_to_pos(a, pos_in_a);
+		if (pos_in_a == -1)
+			break ;
 		target_pos = get_target_position_b(b, a->top->index);
-		rotate_b_to_target(b, target_pos);
+		perform_combined_rotations(a, b, pos_in_a, target_pos);
 		pb(a, b);
 	}
 }
