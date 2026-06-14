@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/14 16:43:17 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/14 18:53:29 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,9 @@ void				rotate_b_to_top(t_stack *b, t_node *target);
 void				insertion_sort(t_stack *a, t_stack *b);
 
 double				compute_disorder(t_stack *stack_a);
+char				*strategy_label(t_strategy requested, t_strategy chosen);
+void				dispatch(t_stack *stack_a, t_stack *stack_b,
+						t_strategy requested);
 void				bench_init(t_bench *bench, int enabled, double disorder);
 void				bench_print(t_bench *bench);
 

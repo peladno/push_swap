@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/14 15:36:17 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/14 18:50:23 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,8 @@ SRCS		=	src/main.c \
 				src/algorithms/simple/insertion_sort.c \
 				src/algorithms/simple/insertion_utils.c \
 				src/algorithms/adaptive/compute_disorder.c \
+				src/algorithms/adaptive/strategy_label.c \
+				src/algorithms/adaptive/dispatch.c \
 				src/benchmark/bench_init.c \
 				src/benchmark/bench_print.c
 OBJS		= $(SRCS:%.c=%.o)
