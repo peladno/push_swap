@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/12 16:51:15 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/14 16:43:17 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ typedef struct s_node
 	struct s_node	*prev;
 }					t_node;
 
-typedef struct s_stack
-{
-	t_node			*top;
-	t_node			*bottom;
-	int				size;
-}					t_stack;
-
 typedef enum e_strategy
 {
 	STRATEGY_ADAPTIVE,
@@ -46,18 +39,6 @@ typedef struct s_config
 	t_strategy		strategy;
 	int				benched;
 }					t_config;
-
-typedef enum e_status
-{
-	STATUS_OK,
-	STATUS_ERROR
-}					t_status;
-
-typedef enum e_operation
-{
-	OP_NOT_DONE,
-	OP_DONE
-}					t_operation;
 
 typedef enum e_op_id
 {
@@ -82,6 +63,26 @@ typedef struct s_bench
 	double			disorder;
 	int				enabled;
 }					t_bench;
+
+typedef struct s_stack
+{
+	t_node			*top;
+	t_node			*bottom;
+	t_bench			*bench;
+	int				size;
+}					t_stack;
+
+typedef enum e_status
+{
+	STATUS_OK,
+	STATUS_ERROR
+}					t_status;
+
+typedef enum e_operation
+{
+	OP_NOT_DONE,
+	OP_DONE
+}					t_operation;
 
 t_node				*create_node(int value);
 void				stack_init(t_stack *stack_a);
@@ -113,7 +114,7 @@ void				rotate_b_to_top(t_stack *b, t_node *target);
 void				insertion_sort(t_stack *a, t_stack *b);
 
 double				compute_disorder(t_stack *stack_a);
-void				bench_init(t_bench *bench, int enbaled, double disorder);
+void				bench_init(t_bench *bench, int enabled, double disorder);
 void				bench_print(t_bench *bench);
 
 int					count_elements_in_chunk(t_stack *a, int chunk_idx,

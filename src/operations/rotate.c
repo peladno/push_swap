@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rotate.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 20:48:00 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 21:09:26 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/14 16:37:37 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ t_operation	ra(t_stack *stack_a)
 
 	result = rotate(stack_a);
 	if (result == OP_DONE)
+	{
+		if (stack_a->bench)
+			stack_a->bench->count[OP_RA]++;
 		ft_putstr_fd("ra\n", 1);
+	}
 	return (result);
 }
 
@@ -45,7 +49,11 @@ t_operation	rb(t_stack *stack_b)
 
 	result = rotate(stack_b);
 	if (result == OP_DONE)
+	{
+		if (stack_b->bench)
+			stack_b->bench->count[OP_RB]++;
 		ft_putstr_fd("rb\n", 1);
+	}
 	return (result);
 }
 
@@ -55,6 +63,8 @@ t_operation	rr(t_stack *stack_a, t_stack *stack_b)
 		return (OP_NOT_DONE);
 	rotate(stack_a);
 	rotate(stack_b);
+	if (stack_a->bench)
+		stack_a->bench->count[OP_RR]++;
 	ft_putstr_fd("rr\n", 1);
 	return (OP_DONE);
 }

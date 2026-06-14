@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 18:01:35 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 21:13:55 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/14 16:39:18 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ t_operation	pa(t_stack *stack_a, t_stack *stack_b)
 
 	result = push(stack_b, stack_a);
 	if (result == OP_DONE)
+	{
+		if (stack_a->bench)
+			stack_a->bench->count[OP_PA]++;
 		ft_putstr_fd("pa\n", 1);
+	}
 	return (result);
 }
 
@@ -52,6 +56,10 @@ t_operation	pb(t_stack *stack_a, t_stack *stack_b)
 
 	result = push(stack_a, stack_b);
 	if (result == OP_DONE)
+	{
+		if (stack_a->bench)
+			stack_a->bench->count[OP_PB]++;
 		ft_putstr_fd("pb\n", 1);
+	}
 	return (result);
 }
