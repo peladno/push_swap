@@ -1,18 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_char.c                                       :+:      :+:    :+:   */
+/*   bench_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/15 22:47:55 by jperez-u          #+#    #+#             */
-/*   Updated: 2026/06/12 15:33:58 by jperez-u         ###   ########.fr       */
+/*   Created: 2026/06/12 14:45:57 by skusakab          #+#    #+#             */
+/*   Updated: 2026/06/12 14:59:17 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "push_swap.h"
 
-int	print_char(int c)
+void	bench_init(t_bench *bench, int enabled, double disorder)
 {
-	return (write(2, &c, 1));
+	ft_bzero(bench->count, sizeof(int) * OP_COUNT);
+	bench->strategy = NULL;
+	bench->enabled = enabled;
+	bench->disorder = disorder;
 }

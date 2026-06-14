@@ -21,7 +21,7 @@ int	print_number(int n)
 	count = 0;
 	if (num < 0)
 	{
-		count += write(1, "-", 1);
+		count += write(2, "-", 1);
 		num = -num;
 	}
 	if (num >= 10)

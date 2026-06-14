@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   swap.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jperez-u <jperez-u@student.42tokyo.jp>     +#+  +:+       +#+        */
+/*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 19:57:14 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/11 21:09:28 by jperez-u         ###   ########.fr       */
+/*   Updated: 2026/06/14 16:17:59 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ t_operation	sa(t_stack *stack_a)
 
 	result = swap(stack_a);
 	if (result == OP_DONE)
+	{
+		if (stack_a->bench)
+			stack_a->bench->count[OP_SA]++;
 		ft_putstr_fd("sa\n", 1);
+	}
 	return (result);
 }
 
@@ -57,7 +61,11 @@ t_operation	sb(t_stack *stack_b)
 
 	result = swap(stack_b);
 	if (result == OP_DONE)
+	{
+		if (stack_b->bench)
+			stack_b->bench->count[OP_SB]++;
 		ft_putstr_fd("sb\n", 1);
+	}
 	return (result);
 }
 
@@ -68,5 +76,7 @@ t_operation	ss(t_stack *stack_a, t_stack *stack_b)
 	swap(stack_a);
 	swap(stack_b);
 	ft_putstr_fd("ss\n", 1);
+	if (stack_a->bench)
+		stack_a->bench->count[OP_SS]++;
 	return (OP_DONE);
 }

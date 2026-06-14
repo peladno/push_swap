@@ -47,7 +47,7 @@ static int	add_written(int *count, int written)
 	return (0);
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_printf_err(const char *format, ...)
 {
 	va_list	args;
 	int		count;
