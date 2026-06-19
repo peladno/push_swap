@@ -109,6 +109,8 @@ t_operation			rrr(t_stack *stack_a, t_stack *stack_b);
 
 void				radix_sort(t_stack *stack_a, t_stack *stack_b);
 
+void    			sort_three(t_stack *a);
+
 t_node				*find_x_below(t_stack *s, int x);
 void				rotate_b_to_top(t_stack *b, t_node *target);
 void				insertion_sort(t_stack *a, t_stack *b);
