@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/20 14:20:38 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/20 15:15:01 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ SRCS		=	src/main.c \
 				src/benchmark/bench_init.c \
 				src/benchmark/bench_print.c \
 				src/algorithms/small/small.c \
-				src/operations/emit.c
+				src/operations/emit.c \
+				src/parser/parse_flag.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)

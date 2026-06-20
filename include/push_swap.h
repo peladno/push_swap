@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/20 14:20:18 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/20 15:21:37 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_config
 {
 	t_strategy		strategy;
 	int				benched;
+	int				strategy_count;
 }					t_config;
 
 typedef enum e_op_id
@@ -92,6 +93,8 @@ void				coord_compress(t_stack *stack_a);
 t_status			validate_token(const char *tok, int *out_value);
 void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
+int					check_strategy(char *str, t_config *config);
+int					is_bench_flag(char *str);
 t_status			parse_args(int argc, char **argv, t_stack *stack_a,
 						t_config *config);
 void				chunk_sort(t_stack *a, t_stack *b);
