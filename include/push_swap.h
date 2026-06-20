@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/14 18:53:29 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/20 13:28:55 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_operation			rrr(t_stack *stack_a, t_stack *stack_b);
 
 void				radix_sort(t_stack *stack_a, t_stack *stack_b);
 
-void    			sort_three(t_stack *a);
+void				sort_small(t_stack *stack_a, t_stack *stack_b);
 
 t_node				*find_x_below(t_stack *s, int x);
 void				rotate_b_to_top(t_stack *b, t_node *target);

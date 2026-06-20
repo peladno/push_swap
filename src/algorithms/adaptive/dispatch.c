@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/14 18:10:04 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/14 18:52:39 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/20 14:03:30 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,18 @@ void	dispatch(t_stack *stack_a, t_stack *stack_b, t_strategy requested)
 {
 	t_strategy	chosen;
 	double		disorder;
+	int			size;
 
 	disorder = stack_a->bench->disorder;
-	chosen = decide_sort(requested, disorder);
-	stack_a->bench->strategy = strategy_label(requested, chosen);
-	run_sort(stack_a, stack_b, chosen);
+	if (disorder == 0)
+		return ;
+	size = stack_a->size;
+	if (2 <= size && size <= 5 && requested == STRATEGY_ADAPTIVE)
+		sort_small(stack_a, stack_b);
+	else
+	{
+		chosen = decide_sort(requested, disorder);
+		stack_a->bench->strategy = strategy_label(requested, chosen);
+		run_sort(stack_a, stack_b, chosen);
+	}
 }
