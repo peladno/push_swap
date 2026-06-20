@@ -6,7 +6,7 @@
 #    By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/27 18:30:26 by skusakab          #+#    #+#              #
-#    Updated: 2026/06/20 13:29:35 by skusakab         ###   ########.fr        #
+#    Updated: 2026/06/20 14:20:38 by skusakab         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,8 @@ SRCS		=	src/main.c \
 				src/algorithms/adaptive/dispatch.c \
 				src/benchmark/bench_init.c \
 				src/benchmark/bench_print.c \
-				src/algorithms/small/small.c
+				src/algorithms/small/small.c \
+				src/operations/emit.c
 OBJS		= $(SRCS:%.c=%.o)
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror -I include -I $(LIBFT_DIR)

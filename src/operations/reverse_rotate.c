@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 21:08:32 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/14 16:37:52 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/20 14:34:03 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,7 @@ t_operation	rra(t_stack *stack_a)
 
 	result = reverse_rotate(stack_a);
 	if (result == OP_DONE)
-	{
-		if (stack_a->bench)
-			stack_a->bench->count[OP_RRA]++;
-		ft_putstr_fd("rra\n", 1);
-	}
+		emit(stack_a->bench, OP_RRA, "rra\n");
 	return (result);
 }
 
@@ -49,11 +45,7 @@ t_operation	rrb(t_stack *stack_b)
 
 	result = reverse_rotate(stack_b);
 	if (result == OP_DONE)
-	{
-		if (stack_b->bench)
-			stack_b->bench->count[OP_RRB]++;
-		ft_putstr_fd("rrb\n", 1);
-	}
+		emit(stack_b->bench, OP_RRB, "rrb\n");
 	return (result);
 }
 
@@ -63,8 +55,6 @@ t_operation	rrr(t_stack *stack_a, t_stack *stack_b)
 		return (OP_NOT_DONE);
 	reverse_rotate(stack_a);
 	reverse_rotate(stack_b);
-	if (stack_a->bench)
-		stack_a->bench->count[OP_RRR]++;
-	ft_putstr_fd("rrr\n", 1);
+	emit(stack_a->bench, OP_RRR, "rrr\n");
 	return (OP_DONE);
 }

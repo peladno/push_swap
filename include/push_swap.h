@@ -6,7 +6,7 @@
 /*   By: skusakab <skusakab@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 18:04:43 by skusakab          #+#    #+#             */
-/*   Updated: 2026/06/20 13:28:55 by skusakab         ###   ########.fr       */
+/*   Updated: 2026/06/20 14:20:18 by skusakab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,5 +131,7 @@ void				rotate_b_to_target(t_stack *b, int target_pos);
 void				align_stack_b(t_stack *b);
 void				push_chunk_to_b(t_stack *a, t_stack *b, int c_idx,
 						int c_size);
+
+void				emit(t_bench *bench, t_op_id op_id, char *name);
 
 #endif
