@@ -43,3 +43,12 @@ int	is_bench_flag(char *str)
 		return (1);
 	return (0);
 }
+
+/* LIVE --silent: detect the new flag (same shape as is_bench_flag).
+int	is_silent_flag(char *str)
+{
+	if (ft_strncmp(str, "--silent", 9) == 0)
+		return (1);
+	return (0);
+}
+*/

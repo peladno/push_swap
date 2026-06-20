@@ -16,4 +16,8 @@ void	emit(t_bench *bench, t_op_id op_id, char *name)
 {
 	bench->count[op_id]++;
 	ft_putstr_fd(name, 1);
+	/* LIVE --silent: gate the op print above on the flag —
+	   if (!bench->silent)
+	       ft_putstr_fd(name, 1);
+	   (count stays unconditional; only the stdout op line is suppressed) */
 }

@@ -54,6 +54,7 @@ static t_status	process_args(char *arg, t_stack *stack_a, t_config *config)
 		config->strategy_count++;
 	else if (is_bench_flag(arg))
 		config->benched++;
+	/* LIVE --silent: else if (is_silent_flag(arg)) config->silent = 1; */
 	else if (push_arg_tokens(arg, stack_a) != STATUS_OK)
 		return (STATUS_ERROR);
 	return (STATUS_OK);
@@ -66,6 +67,7 @@ t_status	parse_args(int argc, char **argv, t_stack *stack_a,
 
 	config->benched = 0;
 	config->strategy_count = 0;
+	/* LIVE --silent: config->silent = 0; */
 	if (argc == 1)
 		return (STATUS_OK);
 	config->strategy = STRATEGY_ADAPTIVE;

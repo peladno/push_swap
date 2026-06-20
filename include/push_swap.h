@@ -39,6 +39,7 @@ typedef struct s_config
 	t_strategy		strategy;
 	int				benched;
 	int				strategy_count;
+	/* LIVE --silent: int  silent; */
 }					t_config;
 
 typedef enum e_op_id
@@ -63,6 +64,7 @@ typedef struct s_bench
 	char			*strategy;
 	double			disorder;
 	int				enabled;
+	/* LIVE --silent: int  silent; */
 }					t_bench;
 
 typedef struct s_stack
@@ -95,6 +97,7 @@ void				free_split(char **tokens);
 int					has_duplicates(t_stack *stack_a);
 int					check_strategy(char *str, t_config *config);
 int					is_bench_flag(char *str);
+/* LIVE --silent: int  is_silent_flag(char *str); */
 t_status			parse_args(int argc, char **argv, t_stack *stack_a,
 						t_config *config);
 void				chunk_sort(t_stack *a, t_stack *b);

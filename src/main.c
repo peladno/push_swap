@@ -33,8 +33,13 @@ int	main(int argc, char **argv)
 	stack_a.bench = &bench;
 	stack_b.bench = &bench;
 	bench_init(&bench, config.benched, compute_disorder(&stack_a));
+	/* LIVE --silent: bench.silent = config.silent; */
 	dispatch(&stack_a, &stack_b, config.strategy);
 	bench_print(&bench);
+	/* LIVE --silent: when silent, print only the op total to stdout —
+	   if (config.silent) { ft_putnbr_fd(<sum of bench.count[]>, 1);
+	       ft_putchar_fd('\n', 1); }
+	   (make count_total_ops non-static + prototype it, or sum inline) */
 	stack_free(&stack_a);
 	stack_free(&stack_b);
 	return (0);
